@@ -1,4 +1,4 @@
-# BookWriter
+# LittleReads
 
 AI-generated bilingual children's books showcase site.
 

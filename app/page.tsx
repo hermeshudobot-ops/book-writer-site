@@ -25,7 +25,7 @@ export default function Home() {
       <nav className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
         <a href="/" className="flex items-center gap-3">
           <span className="text-3xl">📚</span>
-          <span className="text-xl font-extrabold text-green-800 tracking-tight">Books</span>
+          <span className="text-xl font-extrabold text-green-800 tracking-tight">LittleReads</span>
         </a>
         <div className="text-sm text-gray-500">Children&apos;s Books</div>
       </nav>
