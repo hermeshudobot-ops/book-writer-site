@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
-/* ─── Custom fonts ─── */
+/* ─── Fonts ─── */
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Nunito:wght@300;400;600;700&display=swap");
 
 :root {
-  --book-bg: #0c0a09;
+  --book-bg: #1a1510;
   --book-text: #fafaf9;
-  --book-accent: #f59e0b;
-  --book-gold: #d4a853;
+  --gold: #c9a84c;
+  --gold-light: #e2c97e;
 }
 
 body {
@@ -17,304 +17,182 @@ body {
   overflow-x: hidden;
 }
 
-html {
-  scroll-behavior: smooth;
+/* ─── 3D book flip utilities ─── */
+.perspective-book {
+  perspective: 2200px;
+}
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.rotate-flip-out {
+  transform: rotateY(-180deg);
+}
+.rotate-flip-in-reverse {
+  transform: rotateY(180deg);
 }
 
-/* ─── Keyframes ─── */
-@keyframes fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+/* ─── Page paper texture ─── */
+.paper-texture {
+  background: linear-gradient(to right,
+    #f8f5ef 0%,
+    #faf8f2 8%,
+    #fdfcfa 92%,
+    #f5f0e6 100%
+  );
+  position: relative;
 }
-@keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(40px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes fade-in-down {
-  from { opacity: 0; transform: translateY(-30px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes fade-in-left {
-  from { opacity: 0; transform: translateX(-40px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-@keyframes fade-in-right {
-  from { opacity: 0; transform: translateX(40px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-@keyframes scale-in {
-  from { opacity: 0; transform: scale(0.9) translateY(20px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
-}
-@keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-10px); }
-}
-@keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(212, 168, 83, 0.1); }
-  50%      { box-shadow: 0 0 40px rgba(212, 168, 83, 0.25); }
-}
-@keyframes page-reveal {
-  from { clip-path: inset(0 0 100% 0); }
-  to   { clip-path: inset(0 0 0 0); }
-}
-@keyframes text-highlight {
-  from { background-size: 0% 100%; }
-  to   { background-size: 100% 100%; }
-}
-@keyframes parallax-slow {
-  from { transform: translateY(0); }
-  to   { transform: translateY(-50px); }
-}
-@keyframes breathe {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.02); }
-}
-
-/* ─── Animation utility classes ─── */
-.anim-fade-in        { animation: fade-in 1s ease-out both; }
-.anim-fade-in-up     { animation: fade-in-up 0.8s ease-out both; }
-.anim-fade-in-down   { animation: fade-in-down 0.8s ease-out both; }
-.anim-fade-in-left   { animation: fade-in-left 0.8s ease-out both; }
-.anim-fade-in-right  { animation: fade-in-right 0.8s ease-out both; }
-.anim-scale-in       { animation: scale-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.anim-shimmer        { background: linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.1) 50%, transparent 75%); background-size: 200% 100%; animation: shimmer 3s infinite; }
-.anim-float          { animation: float 4s ease-in-out infinite; }
-.anim-glow           { animation: glow-pulse 3s ease-in-out infinite; }
-.anim-breathe        { animation: breathe 6s ease-in-out infinite; }
-
-/* ─── Staggered delays for page reveals ─── */
-.delay-100 { animation-delay: 100ms; }
-.delay-200 { animation-delay: 200ms; }
-.delay-300 { animation-delay: 300ms; }
-.delay-400 { animation-delay: 400ms; }
-.delay-500 { animation-delay: 500ms; }
-.delay-600 { animation-delay: 600ms; }
-.delay-700 { animation-delay: 700ms; }
-.delay-800 { animation-delay: 800ms; }
-
-/* ─── Scroll-reveal via Intersection Observer ─── */
-.reveal {
-  opacity: 0;
-  transform: translateY(50px);
-  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.reveal.active {
-  opacity: 1;
-  transform: translateY(0);
-}
-.reveal-left {
-  opacity: 0;
-  transform: translateX(-60px);
-  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.reveal-left.active {
-  opacity: 1;
-  transform: translateX(0);
-}
-.reveal-right {
-  opacity: 0;
-  transform: translateX(60px);
-  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.reveal-right.active {
-  opacity: 1;
-  transform: translateX(0);
-}
-.reveal-scale {
-  opacity: 0;
-  transform: scale(0.88);
-  transition: opacity 1s ease, transform 1s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.reveal-scale.active {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* ─── Page transitions (client-side navigation) ─── */
-.page-spread::before {
+.paper-texture::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(12,10,9,0.7) 0%, transparent 50%, rgba(12,10,9,0.7) 100%);
-  z-index: 1;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 28px,
+      rgba(0,0,0,0.015) 28px,
+      rgba(0,0,0,0.015) 29px
+    );
   pointer-events: none;
+}
+.paper-texture-left {
+  background: linear-gradient(to left,
+    #f0ece4 0%,
+    #f8f5ef 15%,
+    #fdfcfa 100%
+  );
+  position: relative;
+}
+.paper-texture-left::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 28px,
+      rgba(0,0,0,0.015) 28px,
+      rgba(0,0,0,0.015) 29px
+    );
+  pointer-events: none;
+}
+
+/* ─── Book spine shadow ─── */
+.spine-shadow {
+  box-shadow:
+    inset -8px 0 16px -6px rgba(0,0,0,0.15),
+    inset 8px 0 16px -6px rgba(0,0,0,0.15);
 }
 
 /* ─── Gold accent line ─── */
 .gold-line {
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--book-gold), transparent);
+  background: linear-gradient(90deg, transparent, var(--gold) 50%, transparent);
 }
 
-/* ─── Highlight underline for text ─── */
-.text-highlight-bg {
-  background-image: linear-gradient(to right, rgba(212, 168, 83, 0.2) 100%, transparent 0%);
-  background-repeat: no-repeat;
-  background-size: 0% 1.1em;
-  background-position: 0 85%;
+.gold-rule {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.6), transparent);
 }
-.reveal.active .text-highlight-bg {
-  animation: text-highlight 1.2s 0.6s ease-out forwards;
-}
-
-/* ─── Progress bar at top ─── */
-.reading-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--book-accent), var(--book-gold), #fbbf24);
-  z-index: 9999;
-  transition: width 0.15s ease-out;
-  border-radius: 0 2px 2px 0;
-  box-shadow: 0 0 12px rgba(212, 168, 83, 0.5);
-}
-
-/* ─── Chapter divider ─── */
-.chapter-divider {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 40px 0;
-}
-.chapter-divider span {
-  font-size: 24px;
-  color: var(--book-gold);
-  opacity: 0.6;
-}
-
-/* ─── Typography ─── */
-.font-playfair {
-  font-family: "Playfair Display", Georgia, serif;
-}
-.font-nunito {
-  font-family: "Nunito", system-ui, sans-serif;
-}
-
-/* ─── Book cover 3D effect ─── */
-.book-cover-3d {
-  transform: perspective(1200px) rotateY(0deg) rotateX(2deg);
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.book-cover-3d:hover {
-  transform: perspective(1200px) rotateY(-3deg) rotateX(0deg);
-}
-
-/* ─── Page number badge ─── */
-.page-badge {
-  position: absolute;
-  bottom: 16px;
-  right: 16px;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(212, 168, 83, 0.3);
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 11px;
-  color: rgba(255,255,255,0.7);
-  z-index: 2;
-}
-
-/* ─── Navigation arrows ─── */
-.nav-arrow {
-  position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 100;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: rgba(12,10,9,0.7);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(212,168,83,0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  color: var(--book-gold);
-  font-size: 18px;
-}
-.nav-arrow:hover {
-  background: rgba(212, 168, 83, 0.15);
-  border-color: rgba(212, 168, 83, 0.5);
-  transform: translateY(-50%) scale(1.1);
-}
-.nav-arrow-prev { left: 20px; }
-.nav-arrow-next { right: 20px; }
 
 /* ─── Ambient particles ─── */
 .ambient-particle {
   position: fixed;
-  width: 3px;
-  height: 3px;
+  width: 2px;
+  height: 2px;
   border-radius: 50%;
-  background: rgba(212, 168, 83, 0.3);
+  background: rgba(201, 168, 76, 0.2);
   pointer-events: none;
-  z-index: 50;
-  animation: float var(--duration, 8s) ease-in-out infinite;
-  animation-delay: var(--delay, 0s);
+  z-index: 0;
+}
+@keyframes ambient-float {
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.1; }
+  25% { transform: translateY(-30px) translateX(10px); opacity: 0.3; }
+  75% { transform: translateY(20px) translateX(-10px); opacity: 0.15; }
 }
 
-/* ─── Cinematic letterbox ─── */
-.letterbox-top,
-.letterbox-bottom {
+/* ─── Progress bar ─── */
+.reading-progress-bar {
   position: fixed;
+  top: 0;
   left: 0;
-  right: 0;
-  height: 5vh;
-  background: #000;
-  z-index: 9998;
-  pointer-events: none;
-}
-.letterbox-top { top: 0; }
-.letterbox-bottom { bottom: 0; }
-
-/* ─── Smooth image transition ─── */
-.page-image-wrapper {
-  position: relative;
-  overflow: hidden;
-}
-.page-image-wrapper::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center, transparent 50%, rgba(12,10,9,0.4) 100%);
-  pointer-events: none;
+  height: 2px;
+  background: linear-gradient(90deg, #8b6914, var(--gold), #e2c97e);
+  z-index: 1000;
+  transition: width 0.5s ease-out;
+  box-shadow: 0 0 8px rgba(201, 168, 76, 0.5);
 }
 
-/* ─── Quote style ─── */
-.quote-text {
-  position: relative;
-  padding-left: 40px;
-}
-.quote-text::before {
-  content: "\201C";
-  position: absolute;
-  left: 0;
-  top: -15px;
-  font-size: 60px;
-  color: var(--book-gold);
-  opacity: 0.4;
-  font-family: "Playfair Display", serif;
-  line-height: 1;
+/* ─── Typography ─── */
+.font-playfair { font-family: "Playfair Display", Georgia, serif; }
+.font-nunito { font-family: "Nunito", system-ui, sans-serif; }
+
+/* ─── Page number styling ─── */
+.page-number {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 11px;
+  color: rgba(80, 70, 50, 0.4);
+  letter-spacing: 2px;
 }
 
-/* ─── Vignette overlay ─── */
-.vignette {
-  position: relative;
+/* ─── Book cover ─── */
+.book-cover-glow {
+  box-shadow:
+    0 25px 80px rgba(0,0,0,0.6),
+    0 0 100px rgba(201,168,76,0.08);
 }
-.vignette::before {
-  content: "";
+
+/* ─── Navigation hover ─── */
+.nav-btn {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-btn:hover {
+  transform: scale(1.15);
+  background: rgba(201, 168, 76, 0.15);
+  border-color: rgba(201, 168, 76, 0.4);
+}
+.nav-btn:active {
+  transform: scale(0.95);
+}
+
+/* ─── Smooth transitions for content ─── */
+.page-content-transition {
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+}
+.page-content-visible {
+  opacity: 1;
+}
+
+/* ─── Page curl effect on hover (for next page preview) ─── */
+.page-preview {
+  clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%);
+}
+.page-preview-corner {
   position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.4));
-  pointer-events: none;
-  z-index: 1;
+  top: -1px;
+  right: -1px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, transparent 50%, rgba(200,180,150,0.3) 50%);
+}
+
+/* ─── Scrollbar styling ─── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(201, 168, 76, 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 168, 76, 0.5);
 }
