@@ -1,22 +1,320 @@
 @import "tailwindcss";
 
+/* ─── Custom fonts ─── */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Nunito:wght@300;400;600;700&display=swap");
+
 :root {
-  --background: #ffffff;
-  --foreground: #1a1a1a;
+  --book-bg: #0c0a09;
+  --book-text: #fafaf9;
+  --book-accent: #f59e0b;
+  --book-gold: #d4a853;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family:
-    'Nunito',
-    var(--font-geist-sans),
-    system-ui,
-    -apple-system,
-    sans-serif;
+  color: #fafaf9;
+  background: #0c0a09;
+  font-family: "Nunito", system-ui, sans-serif;
+  overflow-x: hidden;
 }
 
-/* Smooth scroll for book navigation */
 html {
   scroll-behavior: smooth;
+}
+
+/* ─── Keyframes ─── */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in-down {
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in-left {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fade-in-right {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(212, 168, 83, 0.1); }
+  50%      { box-shadow: 0 0 40px rgba(212, 168, 83, 0.25); }
+}
+@keyframes page-reveal {
+  from { clip-path: inset(0 0 100% 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+@keyframes text-highlight {
+  from { background-size: 0% 100%; }
+  to   { background-size: 100% 100%; }
+}
+@keyframes parallax-slow {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50px); }
+}
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.02); }
+}
+
+/* ─── Animation utility classes ─── */
+.anim-fade-in        { animation: fade-in 1s ease-out both; }
+.anim-fade-in-up     { animation: fade-in-up 0.8s ease-out both; }
+.anim-fade-in-down   { animation: fade-in-down 0.8s ease-out both; }
+.anim-fade-in-left   { animation: fade-in-left 0.8s ease-out both; }
+.anim-fade-in-right  { animation: fade-in-right 0.8s ease-out both; }
+.anim-scale-in       { animation: scale-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.anim-shimmer        { background: linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.1) 50%, transparent 75%); background-size: 200% 100%; animation: shimmer 3s infinite; }
+.anim-float          { animation: float 4s ease-in-out infinite; }
+.anim-glow           { animation: glow-pulse 3s ease-in-out infinite; }
+.anim-breathe        { animation: breathe 6s ease-in-out infinite; }
+
+/* ─── Staggered delays for page reveals ─── */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
+.delay-700 { animation-delay: 700ms; }
+.delay-800 { animation-delay: 800ms; }
+
+/* ─── Scroll-reveal via Intersection Observer ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-left.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+.reveal-right {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-right.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.88);
+  transition: opacity 1s ease, transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-scale.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ─── Page transitions (client-side navigation) ─── */
+.page-spread::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(12,10,9,0.7) 0%, transparent 50%, rgba(12,10,9,0.7) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ─── Gold accent line ─── */
+.gold-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--book-gold), transparent);
+}
+
+/* ─── Highlight underline for text ─── */
+.text-highlight-bg {
+  background-image: linear-gradient(to right, rgba(212, 168, 83, 0.2) 100%, transparent 0%);
+  background-repeat: no-repeat;
+  background-size: 0% 1.1em;
+  background-position: 0 85%;
+}
+.reveal.active .text-highlight-bg {
+  animation: text-highlight 1.2s 0.6s ease-out forwards;
+}
+
+/* ─── Progress bar at top ─── */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--book-accent), var(--book-gold), #fbbf24);
+  z-index: 9999;
+  transition: width 0.15s ease-out;
+  border-radius: 0 2px 2px 0;
+  box-shadow: 0 0 12px rgba(212, 168, 83, 0.5);
+}
+
+/* ─── Chapter divider ─── */
+.chapter-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px 0;
+}
+.chapter-divider span {
+  font-size: 24px;
+  color: var(--book-gold);
+  opacity: 0.6;
+}
+
+/* ─── Typography ─── */
+.font-playfair {
+  font-family: "Playfair Display", Georgia, serif;
+}
+.font-nunito {
+  font-family: "Nunito", system-ui, sans-serif;
+}
+
+/* ─── Book cover 3D effect ─── */
+.book-cover-3d {
+  transform: perspective(1200px) rotateY(0deg) rotateX(2deg);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.book-cover-3d:hover {
+  transform: perspective(1200px) rotateY(-3deg) rotateX(0deg);
+}
+
+/* ─── Page number badge ─── */
+.page-badge {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(212, 168, 83, 0.3);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.7);
+  z-index: 2;
+}
+
+/* ─── Navigation arrows ─── */
+.nav-arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(12,10,9,0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(212,168,83,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--book-gold);
+  font-size: 18px;
+}
+.nav-arrow:hover {
+  background: rgba(212, 168, 83, 0.15);
+  border-color: rgba(212, 168, 83, 0.5);
+  transform: translateY(-50%) scale(1.1);
+}
+.nav-arrow-prev { left: 20px; }
+.nav-arrow-next { right: 20px; }
+
+/* ─── Ambient particles ─── */
+.ambient-particle {
+  position: fixed;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(212, 168, 83, 0.3);
+  pointer-events: none;
+  z-index: 50;
+  animation: float var(--duration, 8s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+/* ─── Cinematic letterbox ─── */
+.letterbox-top,
+.letterbox-bottom {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 5vh;
+  background: #000;
+  z-index: 9998;
+  pointer-events: none;
+}
+.letterbox-top { top: 0; }
+.letterbox-bottom { bottom: 0; }
+
+/* ─── Smooth image transition ─── */
+.page-image-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+.page-image-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(12,10,9,0.4) 100%);
+  pointer-events: none;
+}
+
+/* ─── Quote style ─── */
+.quote-text {
+  position: relative;
+  padding-left: 40px;
+}
+.quote-text::before {
+  content: "\201C";
+  position: absolute;
+  left: 0;
+  top: -15px;
+  font-size: 60px;
+  color: var(--book-gold);
+  opacity: 0.4;
+  font-family: "Playfair Display", serif;
+  line-height: 1;
+}
+
+/* ─── Vignette overlay ─── */
+.vignette {
+  position: relative;
+}
+.vignette::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.4));
+  pointer-events: none;
+  z-index: 1;
 }
