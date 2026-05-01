@@ -75,7 +75,7 @@ export default async function BookReader({ params }: { params: Promise<{ slug: s
             {/* Full-width image */}
             <div className="relative w-full aspect-[16/9] bg-green-50">
               <img
-                src={`/books/${book.slug}/${page.image}`}
+                src={`/books/${book.slug}/images/${page.image}`}
                 alt={`Page ${page.number} illustration`}
                 className="w-full h-full object-contain"
                 loading="lazy"
