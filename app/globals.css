@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* ─── Fonts ─── */
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Nunito:wght@300;400;600;700&display=swap");
 
 :root {
@@ -14,93 +13,21 @@ body {
   color: #fafaf9;
   background: #0c0a09;
   font-family: "Nunito", system-ui, sans-serif;
-  overflow-x: hidden;
 }
 
-/* ─── 3D book flip utilities ─── */
-.perspective-book {
-  perspective: 2200px;
-}
-.preserve-3d {
-  transform-style: preserve-3d;
-}
-.backface-hidden {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-.rotate-flip-out {
-  transform: rotateY(-180deg);
-}
-.rotate-flip-in-reverse {
-  transform: rotateY(180deg);
-}
-
-/* ─── Page paper texture ─── */
-.paper-texture {
-  background: linear-gradient(to right,
-    #f8f5ef 0%,
-    #faf8f2 8%,
-    #fdfcfa 92%,
-    #f5f0e6 100%
-  );
-  position: relative;
-}
-.paper-texture::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      transparent,
-      transparent 28px,
-      rgba(0,0,0,0.015) 28px,
-      rgba(0,0,0,0.015) 29px
-    );
-  pointer-events: none;
-}
-.paper-texture-left {
-  background: linear-gradient(to left,
-    #f0ece4 0%,
-    #f8f5ef 15%,
-    #fdfcfa 100%
-  );
-  position: relative;
-}
-.paper-texture-left::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      transparent,
-      transparent 28px,
-      rgba(0,0,0,0.015) 28px,
-      rgba(0,0,0,0.015) 29px
-    );
-  pointer-events: none;
-}
-
-/* ─── Book spine shadow ─── */
-.spine-shadow {
-  box-shadow:
-    inset -8px 0 16px -6px rgba(0,0,0,0.15),
-    inset 8px 0 16px -6px rgba(0,0,0,0.15);
-}
-
-/* ─── Gold accent line ─── */
-.gold-line {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold) 50%, transparent);
-}
-
-.gold-rule {
+/* Progress bar */
+.reading-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.6), transparent);
+  background: linear-gradient(90deg, #8b6914, #c9a84c, #e2c97e);
+  z-index: 1000;
+  transition: width 0.5s ease-out;
+  box-shadow: 0 0 8px rgba(201, 168, 76, 0.5);
 }
 
-/* ─── Ambient particles ─── */
+/* Ambient particles */
 .ambient-particle {
   position: fixed;
   width: 2px;
@@ -109,90 +36,22 @@ body {
   background: rgba(201, 168, 76, 0.2);
   pointer-events: none;
   z-index: 0;
+  animation: ambient-float 8s ease-in-out infinite;
 }
+
 @keyframes ambient-float {
   0%, 100% { transform: translateY(0) translateX(0); opacity: 0.1; }
   25% { transform: translateY(-30px) translateX(10px); opacity: 0.3; }
   75% { transform: translateY(20px) translateX(-10px); opacity: 0.15; }
 }
 
-/* ─── Progress bar ─── */
-.reading-progress-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #8b6914, var(--gold), #e2c97e);
-  z-index: 1000;
-  transition: width 0.5s ease-out;
-  box-shadow: 0 0 8px rgba(201, 168, 76, 0.5);
+@keyframes sweep {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
-/* ─── Typography ─── */
-.font-playfair { font-family: "Playfair Display", Georgia, serif; }
-.font-nunito { font-family: "Nunito", system-ui, sans-serif; }
-
-/* ─── Page number styling ─── */
-.page-number {
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: 11px;
-  color: rgba(80, 70, 50, 0.4);
-  letter-spacing: 2px;
-}
-
-/* ─── Book cover ─── */
-.book-cover-glow {
-  box-shadow:
-    0 25px 80px rgba(0,0,0,0.6),
-    0 0 100px rgba(201,168,76,0.08);
-}
-
-/* ─── Navigation hover ─── */
-.nav-btn {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.nav-btn:hover {
-  transform: scale(1.15);
-  background: rgba(201, 168, 76, 0.15);
-  border-color: rgba(201, 168, 76, 0.4);
-}
-.nav-btn:active {
-  transform: scale(0.95);
-}
-
-/* ─── Smooth transitions for content ─── */
-.page-content-transition {
-  opacity: 0;
-  transition: opacity 0.6s ease-in-out;
-}
-.page-content-visible {
-  opacity: 1;
-}
-
-/* ─── Page curl effect on hover (for next page preview) ─── */
-.page-preview {
-  clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%);
-}
-.page-preview-corner {
-  position: absolute;
-  top: -1px;
-  right: -1px;
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(135deg, transparent 50%, rgba(200,180,150,0.3) 50%);
-}
-
-/* ─── Scrollbar styling ─── */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(201, 168, 76, 0.3);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(201, 168, 76, 0.5);
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.05; }
+  25% { transform: translateY(-15px) translateX(5px); opacity: 0.2; }
+  75% { transform: translateY(10px) translateX(-5px); opacity: 0.1; }
 }
