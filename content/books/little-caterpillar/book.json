@@ -1,0 +1,114 @@
+{
+  "slug": "little-caterpillar",
+  "title_en": "The Little Caterpillar",
+  "title_vi": "Chú Sâu Bướm Nhỏ",
+  "author": "Hung Manh Do",
+  "age_range": "2-6 years",
+  "description_en": "A beautiful bilingual story about a little caterpillar named Nunu who transforms into a magnificent butterfly.",
+  "description_vi": "Một câu chuyện song ngữ tuyệt đẹp về chú sâu nhỏ Nunu biến thành chú bướm xinh đẹp.",
+  "theme": "transformation, nature, growth",
+  "cover_image": "images/page_01.jpg",
+  "format": "landscape",
+  "page_count": 16,
+  "created_at": "2026-05-01",
+  "status": "published",
+  "featured": true,
+  "pages": [
+    {
+      "number": 1,
+      "title_en": "In a green leafy garden, there lived a little caterpillar.",
+      "title_vi": "Trong một khu vườn xanh lá, có một chú sâu bướm nhỏ.",
+      "image": "page_01.jpg"
+    },
+    {
+      "number": 2,
+      "title_en": "His name was Nunu. He looked at the world with wonder.",
+      "title_vi": "Tên chú là Nunu. Chú nhìn thế giới với sự tò mò.",
+      "image": "page_02.jpg"
+    },
+    {
+      "number": 3,
+      "title_en": "Every morning, Nunu woke up hungry and ready to explore.",
+      "title_vi": "Mỗi sớm, Nunu tỉnh dậy đói bụng và sẵn sàng khám phá.",
+      "image": "page_03.jpg"
+    },
+    {
+      "number": 4,
+      "title_en": "First, he nibbled on a sweet red apple.",
+      "title_vi": "Đầu tiên, chú nhấm nháp một quả táo đỏ ngọt ngào.",
+      "image": "page_04.jpg"
+    },
+    {
+      "number": 5,
+      "title_en": "Then he found a juicy yellow leaf that crunched so good.",
+      "title_vi": "Rồi chú tìm được một chiếc lá vàng mọng nước rất giòn.",
+      "image": "page_05.jpg"
+    },
+    {
+      "number": 6,
+      "title_en": "He crawled slowly over the tall garden stems.",
+      "title_vi": "Chú bò chậm chậm qua những thân cây trong vườn.",
+      "image": "page_06.jpg"
+    },
+    {
+      "number": 7,
+      "title_en": "Rain drops fell. Nunu hid under a big leaf umbrella.",
+      "title_vi": "Giọt mưa rơi. Nunu trốn dưới chiếc lá to như chiếc ô.",
+      "image": "page_07.jpg"
+    },
+    {
+      "number": 8,
+      "title_en": "After the rain, a beautiful rainbow appeared in the sky.",
+      "title_vi": "Sau cơn mưa, một cầu vồng đẹp hiện lên bầu trời.",
+      "image": "page_08.jpg"
+    },
+    {
+      "number": 9,
+      "title_en": "Nunu felt sleepy. It was time for a long rest.",
+      "title_vi": "Nunu cảm thấy buồn ngủ. Đã đến lúc nghỉ ngơi thật lâu.",
+      "image": "page_09.jpg"
+    },
+    {
+      "number": 10,
+      "title_en": "Inside the cocoon, something wonderful was happening.",
+      "title_vi": "Bên trong tổ kén, điều kỳ diệu đang xảy ra.",
+      "image": "page_10.jpg"
+    },
+    {
+      "number": 11,
+      "title_en": "One day... the cocoon opened. Wings began to emerge!",
+      "title_vi": "Một ngày... tổ kén mở ra. Đôi cánh bắt đầu hiện ra!",
+      "image": "page_11.jpg"
+    },
+    {
+      "number": 12,
+      "title_en": "Nunu became a beautiful butterfly with bright wings.",
+      "title_vi": "Nunu đã trở thành một chú bướm xinh đẹp với đôi cánh rực rỡ.",
+      "image": "page_12.jpg"
+    },
+    {
+      "number": 13,
+      "title_en": "He spread his wings and flew into the sky.",
+      "title_vi": "Chú dang đôi cánh và bay lên bầu trời.",
+      "image": "page_13.jpg"
+    },
+    {
+      "number": 14,
+      "title_en": "The garden looked so beautiful from above. So big! So alive!",
+      "title_vi": "Khu vườn nhìn từ trên cao đẹp quá. Rộng lớn và sống động quá!",
+      "image": "page_14.jpg"
+    },
+    {
+      "number": 15,
+      "title_en": "The little caterpillar Nunu became the most beautiful butterfly in the garden.",
+      "title_vi": "Chú sâu nhỏ Nunu đã trở thành chú bướm đẹp nhất khu vườn.",
+      "image": "page_15.jpg"
+    },
+    {
+      "number": 16,
+      "title_en": "Even the biggest transformation begins with a tiny step.",
+      "title_vi": "Ngay cả sự thay đổi lớn nhất cũng bắt đầu từ một bước nhỏ.",
+      "image": "page_16.jpg"
+    }
+  ]
+}

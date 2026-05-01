@@ -1,0 +1,15 @@
+{
+  "books": [
+    {
+      "slug": "little-caterpillar",
+      "title_en": "The Little Caterpillar",
+      "title_vi": "Chú Sâu Bướm Nhỏ",
+      "author": "Hung Manh Do",
+      "age_range": "2-6 years",
+      "cover_image": "images/page_01.jpg",
+      "page_count": 16,
+      "featured": true,
+      "status": "published"
+    }
+  ]
+}
