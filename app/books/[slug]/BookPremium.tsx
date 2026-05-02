@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef, Fragment } from "react";
+import { useState, useEffect, useCallback, useRef, Fragment, type ComponentType } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
-import HTMLFlipBook from "react-pageflip";
+
+const HTMLFlipBook = dynamic(() => import("react-pageflip"), { ssr: false, loading: () => <div className="w-full h-full flex items-center justify-center text-white/60 font-bold" style={{ fontFamily: "'Nunito', sans-serif" }}>Loading book...</div> }) as unknown as ComponentType<any>;
 
 // ═══════════════════════════════════════
 // Types
@@ -460,7 +462,7 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
       <div className="relative w-full max-w-5xl h-[90vh] md:h-[80vh]">
         {/* React-pageflip book */}
         <HTMLFlipBook
-          ref={(el) => { bookRef.current = el; }}
+          ref={(el: any) => { bookRef.current = el; }}
           width={550}
           height={733}
           size="stretch"
