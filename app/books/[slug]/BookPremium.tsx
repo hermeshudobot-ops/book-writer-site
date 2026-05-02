@@ -1,10 +1,15 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef, Fragment, type ComponentType } from "react";
-import dynamic from "next/dynamic";
+import { useState, useEffect, useCallback, useRef, Fragment, type ComponentType, Suspense } from "react";
 import Link from "next/link";
 
-const HTMLFlipBook = dynamic(() => import("react-pageflip"), { ssr: false, loading: () => <div className="w-full h-full flex items-center justify-center text-white/60 font-bold" style={{ fontFamily: "'Nunito', sans-serif" }}>Loading book...</div> }) as unknown as ComponentType<any>;
+// react-pageflip crashes during SSR because it accesses `window`
+// We lazy-load it in a useEffect instead
+let HTMLFlipBook: ComponentType<any> | null = null;
+
+if (typeof window !== "undefined") {
+  HTMLFlipBook = require("react-pageflip") as ComponentType<any>;
+}
 
 // ═══════════════════════════════════════
 // Types
@@ -245,13 +250,18 @@ function EndPage({ book, audio, audioPlaying, totalPages }: { book: BookData; au
 // ═══════════════════════════════════════
 export default function BookPremium({ book, bookSlug }: { book: BookData; bookSlug: string }) {
   const totalPages = book.pages.length;
+  const [mounted, setMounted] = useState(false);
   const [currentPage, setCurrentPage] = useState(0); // 0=cover, 1..N=story pages, N+1=end
   const [uiVisible, setUiVisible] = useState(true);
   const [autoReadMode, setAutoReadMode] = useState(false);
   const [autoReadLang, setAutoReadLang] = useState<"en" | "vi">("vi");
   const uiTimer = useRef<NodeJS.Timeout | null>(null);
   const autoTimer = useRef<NodeJS.Timeout | null>(null);
-  const bookRef = useRef<any>(null); // react-pageflip instance ref
+  const bookRef = useRef<any>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // ── Auto-read: plays audio → when done advances page → repeats
   const [autoAudioPlaying, setAutoAudioPlaying] = useState<"en" | "vi" | null>(null);
@@ -460,56 +470,60 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
     <div className="relative w-full h-screen bg-black overflow-hidden select-none flex items-center justify-center">
       {/* Book container centered */}
       <div className="relative w-full max-w-5xl h-[90vh] md:h-[80vh]">
-        {/* React-pageflip book */}
-        <HTMLFlipBook
-          ref={(el: any) => { bookRef.current = el; }}
-          width={550}
-          height={733}
-          size="stretch"
-          minWidth={300}
-          maxWidth={1000}
-          minHeight={400}
-          maxHeight={1333}
-          showCover={true}
-          flippingTime={800}
-          startPage={0}
-          drawShadow={true}
-          maxShadowOpacity={0.4}
-          showPageCorners={true}
-          disableFlipByClick={false}
-          usePortrait={true}
-          startZIndex={0}
-          autoSize={true}
-          mobileScrollSupport={true}
-          clickEventForward={true}
-          useMouseEvents={true}
-          swipeDistance={50}
-          className="mx-auto"
-          style={{ boxShadow: "0 0 30px rgba(0,0,0,0.4)" }}
-        >
-          {/* Cover (hard cover - pages 0) */}
-          <div className="w-full h-full bg-stone-100">
-            <CoverPage book={book} slug={bookSlug} audio={{ playing: currentAudioPlaying, play: normalPlay, stop: normalStop, playAuto: () => {} }} audioPlaying={currentAudioPlaying} />
-          </div>
-
-          {/* Story pages */}
-          {book.pages.map((page, idx) => (
-            <div key={page.number} className="w-full h-full">
-              <PageContent
-                pageNum={idx + 1}
-                book={book}
-                slug={bookSlug}
-                audio={{ playing: currentAudioPlaying, play: normalPlay, stop: normalStop, playAuto: () => {} }}
-                audioPlaying={currentAudioPlaying}
-              />
+        {/* React-pageflip book — only render on client */}
+        {!mounted || !HTMLFlipBook ? (
+          <div className="w-full h-full flex items-center justify-center text-white/60 font-bold bg-black" style={{ fontFamily: "'Nunito', sans-serif" }}>Loading book...</div>
+        ) : (
+          <HTMLFlipBook
+            ref={(el: any) => { bookRef.current = el; }}
+            width={550}
+            height={733}
+            size="stretch"
+            minWidth={300}
+            maxWidth={1000}
+            minHeight={400}
+            maxHeight={1333}
+            showCover={true}
+            flippingTime={800}
+            startPage={0}
+            drawShadow={true}
+            maxShadowOpacity={0.4}
+            showPageCorners={true}
+            disableFlipByClick={false}
+            usePortrait={true}
+            startZIndex={0}
+            autoSize={true}
+            mobileScrollSupport={true}
+            clickEventForward={true}
+            useMouseEvents={true}
+            swipeDistance={50}
+            className="mx-auto"
+            style={{ boxShadow: "0 0 30px rgba(0,0,0,0.4)" }}
+          >
+            {/* Cover (hard cover - pages 0) */}
+            <div className="w-full h-full bg-stone-100">
+              <CoverPage book={book} slug={bookSlug} audio={{ playing: currentAudioPlaying, play: normalPlay, stop: normalStop, playAuto: () => {} }} audioPlaying={currentAudioPlaying} />
             </div>
-          ))}
 
-          {/* End page */}
-          <div className="w-full h-full bg-stone-100">
-            <EndPage book={book} audio={{ playing: currentAudioPlaying, play: normalPlay, stop: normalStop, playAuto: () => {} }} audioPlaying={currentAudioPlaying} totalPages={totalPages} />
-          </div>
-        </HTMLFlipBook>
+            {/* Story pages */}
+            {book.pages.map((page, idx) => (
+              <div key={page.number} className="w-full h-full">
+                <PageContent
+                  pageNum={idx + 1}
+                  book={book}
+                  slug={bookSlug}
+                  audio={{ playing: currentAudioPlaying, play: normalPlay, stop: normalStop, playAuto: () => {} }}
+                  audioPlaying={currentAudioPlaying}
+                />
+              </div>
+            ))}
+
+            {/* End page */}
+            <div className="w-full h-full bg-stone-100">
+              <EndPage book={book} audio={{ playing: currentAudioPlaying, play: normalPlay, stop: normalStop, playAuto: () => {} }} audioPlaying={currentAudioPlaying} totalPages={totalPages} />
+            </div>
+          </HTMLFlipBook>
+        )}
       </div>
 
       {/* Top bar */}
