@@ -1,0 +1,134 @@
+{
+  "slug": "tico-brave-day",
+  "title_en": "Tico's Brave Day",
+  "title_vi": "Ngày Dũng Cảm Của Tico",
+  "author": "Hung Manh Do",
+  "age_range": "2-6 years",
+  "description_en": "A little turtle named Tico learns that being scared is okay — and that being brave means trying anyway.",
+  "description_vi": "Chú rùa nhỏ Tico học được rằng sợ hãi không sao cả — dũng cảm nghĩa là vẫn thử dù sợ.",
+  "theme": "emotional courage, overcoming fear, turtle, ocean",
+  "cover_image": "images/page_01.jpg",
+  "format": "landscape",
+  "page_count": 16,
+  "created_at": "2026-05-01",
+  "status": "draft",
+  "featured": false,
+  "end_emoji": "🐢",
+  "pages": [
+    {
+      "number": 1,
+      "title_en": "This is Tico. Tico is a little turtle with a big green shell.",
+      "title_vi": "Đây là Tico. Tico là một chú rùa nhỏ với chiếc mai xanh to.",
+      "image": "images/page_01.jpg",
+      "prompt": "A cute baby turtle with a bright green patterned shell sitting on a sandy beach, photorealistic nature photography, child-friendly and appealing, soft warm golden hour lighting, close-up shot, shallow depth of field, turquoise ocean in background, adorable large expressive eyes, Pixar 3D animation style"
+    },
+    {
+      "number": 2,
+      "title_en": "Tico loved playing in the sand. He built castles and dug holes.",
+      "title_vi": "Tico thích chơi trên cát. Chú xây lâu đài và đào những chiếc hố.",
+      "image": "images/page_02.jpg",
+      "prompt": "A cute baby turtle with green shell playing on a sunny beach surrounded by sand castles and shells, photorealistic nature photography, child-friendly and appealing, bright warm sunlight, close-up macro shot, shallow depth of field, adorable happy expression, warm sandy beach tones, Pixar 3D animation style"
+    },
+    {
+      "number": 3,
+      "title_en": "But Tico was afraid of the water. The big waves scared him.",
+      "title_vi": "Nhưng Tico sợ nước. Những con sóng lớn làm chú sợ hãi.",
+      "image": "images/page_03.jpg",
+      "prompt": "A cute baby turtle with green shell hiding inside its shell at the edge of the beach, looking scared at big ocean waves approaching, photorealistic nature photography, child-friendly and appealing, dramatic lighting with one side warm and the ocean side cool blue, close-up shot, adorable worried expression, Pixar 3D animation style"
+    },
+    {
+      "number": 4,
+      "title_en": "Every day, Tico watched the crabs swimming in the ocean. He wished he could swim too.",
+      "title_vi": "Mỗi ngày, Tico ngắm nhìn những chú cua bơi trong đại dương. Chú cũng muốn được bơi như vậy.",
+      "image": "images/page_04.jpg",
+      "prompt": "A cute baby turtle with green shell sitting at the beach watching little crabs play in shallow ocean water, wistful expression, photorealistic nature photography, child-friendly and appealing, soft natural morning light, close-up shot, shallow depth of field, turquoise water with small crabs, Pixar 3D animation style"
+    },
+    {
+      "number": 5,
+      "title_en": "\"Come swim with us!\" called the crabs. \"No, the water is too deep,\" said Tico.",
+      "title_vi": "\"Bơi với bọn tớ đi!\" những chú cua gọi. \"Không đâu, nước sâu lắm,\" Tico nói.",
+      "image": "images/page_05.jpg",
+      "prompt": "Friendly little crabs in shallow turquoise ocean water reaching out to a cute baby turtle who stays back nervously on the sand, photorealistic nature photography, child-friendly and appealing, bright cheerful tropical setting, close-up shot, shallow depth of field, adorable characters, Pixar 3D animation style"
+    },
+    {
+      "number": 6,
+      "title_en": "Even a tiny seagull flew over and said, \"You can do it, little turtle!\"",
+      "title_vi": "Thậm chí một chú chim hải âu nhỏ cũng bay qua nói: \"Cháu làm được mà, bé rùa ơi!\"",
+      "image": "images/page_06.jpg",
+      "prompt": "A friendly white seagull flying low and talking down to a cute baby turtle with green shell on the beach, encouraging gesture, photorealistic nature photography, child-friendly and appealing, soft golden lighting, close-up shot, shallow depth of field, warm sandy beach, Pixar 3D animation style"
+    },
+    {
+      "number": 7,
+      "title_en": "Tico closed his eyes. \"I want to try,\" he whispered.",
+      "title_vi": "Tico nhắm mắt lại. \"Cháu muốn thử,\" chú thầm nói.",
+      "image": "images/page_07.jpg",
+      "prompt": "A determined cute baby turtle with green shell at the shoreline, eyes closed, taking a deep breath before stepping into gentle foam waves, photorealistic nature photography, child-friendly and appealing, warm golden hour lighting, close-up shot, shallow depth of field, gentle sea foam around feet, Pixar 3D animation style"
+    },
+    {
+      "number": 8,
+      "title_en": "One small step. The water touched his toes. It was warm and ticklish!",
+      "title_vi": "Một bước nhỏ. Nước chạm vào chân chú. Nước ấm và nhột quá!",
+      "image": "images/page_08.jpg",
+      "prompt": "A cute baby turtle with green shell stepping into shallow turquoise water with a surprised and happy expression as gentle sea foam washes over its feet, photorealistic nature photography, child-friendly and appealing, sparkling clear water, warm sunlight, close-up shot, shallow depth of field, joyful moment, Pixar 3D animation style"
+    },
+    {
+      "number": 9,
+      "title_en": "Tico smiled. The water felt like a warm hug from the ocean.",
+      "title_vi": "Tico mỉm cười. Nước ấm như một cái ôm từ đại dương.",
+      "image": "images/page_09.jpg",
+      "prompt": "A happy cute baby turtle with green shell standing up to its knees in gentle crystal clear shallow ocean water, big smile, sparkling fish swimming around, photorealistic nature photography, child-friendly and appealing, bright warm sunlight on water, close-up shot, shallow depth of field, beautiful turquoise ocean, Pixar 3D animation style"
+    },
+    {
+      "number": 10,
+      "title_en": "Tico floated on his back. The sky was so blue. He felt so free!",
+      "title_vi": "Tico nổi ngửa trên mặt nước. Bầu trời xanh quá. Chú cảm thấy thật tự do!",
+      "image": "images/page_10.jpg",
+      "prompt": "A happy baby turtle with green shell floating on its back in calm crystal clear turquoise ocean water, looking up at the bright blue sky, completely relaxed, photorealistic nature photography, child-friendly and appealing, gorgeous water reflections, wide shot with sky visible, warm golden lighting, Pixar 3D animation style"
+    },
+    {
+      "number": 11,
+      "title_en": "The crabs cheered! \"Tico can swim! You were so brave!\"",
+      "title_vi": "Những chú cua vỗ tay! \"Tico biết bơi rồi! Bạn thật là dũng cảm!\"",
+      "image": "images/page_11.jpg",
+      "prompt": "A group of adorable little crabs cheering and clapping in shallow ocean water while a happy baby turtle with green shell paddles nearby proudly, photorealistic nature photography, child-friendly and appealing, bright sunny tropical setting, close-up shot, joyful celebration, Pixar 3D animation style"
+    },
+    {
+      "number": 12,
+      "title_en": "Tico splashed and swam all afternoon. The ocean became his favorite place.",
+      "title_vi": "Tico té nước và bơi cả buổi chiều. Đại dương đã trở thành nơi yêu thích của chú.",
+      "image": "images/page_12.jpg",
+      "prompt": "A joyful cute baby turtle with green shell swimming confidently in beautiful turquoise ocean water with colorful tropical fish and sea plants, splashing water playfully, photorealistic nature photography, child-friendly and appealing, underwater and above water split composition, warm natural lighting, shallow depth of field, Pixar 3D animation style"
+    },
+    {
+      "number": 13,
+      "title_en": "That night, Tico slept on the beach under the stars.",
+      "title_vi": "Tối hôm đó, Tico ngủ trên bãi biển dưới ánh sao.",
+      "image": "images/page_13.jpg",
+      "prompt": "A peaceful sleeping cute baby turtle with green shell curled up on a soft sandy beach under a starry night sky with moonlight casting glow on the water, photorealistic nature photography, child-friendly and appealing, magical moonlight, cool blue and warm amber tones, shallow depth of field, serene atmosphere, Pixar 3D animation style"
+    },
+    {
+      "number": 14,
+      "title_en": "Tico learned something important: Being afraid is okay. Being brave means trying anyway.",
+      "title_vi": "Tico học được điều quan trọng: Sợ hãi không sao cả. Dũng cảm nghĩa là vẫn thử dù sợ.",
+      "image": "images/page_14.jpg",
+      "content_en": "Tico learned something important: Being afraid is okay. Being brave means trying anyway.",
+      "title_vi_alt": "Tico học được điều quan trọng",
+      "image_alt_vi": "Sợ hãi không sao cả. Dũng cảm nghĩa là vẫn thử dù sợ.",
+      "prompt": "A cute determined baby turtle with green shell standing proudly at the beach at sunrise, both paws up triumphantly looking from the beach toward the beautiful calm turquoise ocean, confident expression, photorealistic nature photography, child-friendly and appealing, golden hour sunrise lighting, close-up shot, inspiring heroic composition, warm oranges and golds, Pixar 3D animation style"
+    },
+    {
+      "number": 15,
+      "title_en": "The next day, Tico was the first one in the water.",
+      "title_vi": "Hôm sau, Tico là người đầu tiên xuống nước.",
+      "prompt": "A confident happy baby turtle with green shell splashing dramatically into crystal clear turquoise shallow ocean water with a big joyful smile, water splash frozen mid-air, photorealistic nature photography, child-friendly and appealing, bright sunny tropical beach, action shot, close-up, dynamic composition, Pixar 3D animation style",
+      "image": "images/page_15.jpg"
+    },
+    {
+      "number": 16,
+      "title_en": "The End",
+      "title_vi": "Hết",
+      "image": "images/page_16.jpg",
+      "prompt": "A beautiful beach scene at sunset with gentle waves on the shore, footprints in the sand leading from a small turtle toward the ocean, peaceful and warm ending scene, photorealistic nature photography, child-friendly and appealing, dramatic golden hour sunset sky with orange and pink clouds, wide panoramic shot, serene atmosphere, Pixar 3D animation style"
+    }
+  ]
+}

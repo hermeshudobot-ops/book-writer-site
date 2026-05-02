@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, Fragment } from "react";
 import Link from "next/link";
+import HTMLFlipBook from "react-pageflip";
 
 // ═══════════════════════════════════════
 // Types
@@ -22,6 +23,7 @@ interface BookData {
   description_vi?: string;
   pages: BookPage[];
   page_count: number;
+  end_emoji?: string;
 }
 
 // ═══════════════════════════════════════
@@ -118,7 +120,63 @@ function AudioButton({ label, playing, onClick }: { label: string; playing: bool
 }
 
 // ═══════════════════════════════════════
-// Cover page
+// Page renderer for HTMLFlipBook
+// ═══════════════════════════════════════
+function PageContent({
+  pageNum,
+  book,
+  slug,
+  audio,
+  audioPlaying,
+}: {
+  pageNum: number; // 1..N (1-based index into pages)
+  book: BookData;
+  slug: string;
+  audio: ReturnType<typeof useAudio>;
+  audioPlaying: string | null;
+}) {
+  const bp = book.pages[pageNum - 1];
+  if (!bp) return null;
+
+  return (
+    <div className="w-full h-full flex flex-col bg-white overflow-hidden">
+      <div className="w-full flex-[3] relative overflow-hidden">
+        <img
+          src={`/books/${slug}/images/${bp.image}`}
+          alt={`Page ${bp.number}`}
+          className="w-full h-full object-cover"
+        />
+      </div>
+      <div className="flex-[2] flex flex-col items-center justify-center px-4 md:px-8 pb-4 relative">
+        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-400 text-white text-xs font-black">
+          {bp.number}
+        </span>
+        <div className="my-2">
+          <svg width="40" height="8" viewBox="0 0 40 8" fill="none">
+            <rect x="0" y="3" width="12" height="2" rx="1" fill="#f59e0b" opacity="0.5" />
+            <circle cx="20" cy="4" r="3" fill="#f59e0b" opacity="0.4" />
+            <rect x="28" y="3" width="12" height="2" rx="1" fill="#f59e0b" opacity="0.5" />
+          </svg>
+        </div>
+        <div className="flex items-center gap-2 mb-2">
+          <AudioButton label="🇬🇧 EN" playing={audioPlaying === "en"} onClick={() => audioPlaying === "en" ? audio.stop() : audio.play("en", pageNum)} />
+          <AudioButton label="🇻🇳 VI" playing={audioPlaying === "vi"} onClick={() => audioPlaying === "vi" ? audio.stop() : audio.play("vi", pageNum)} />
+        </div>
+        <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-center text-stone-800 leading-snug mb-2 px-2"
+          style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700 }}>
+          {bp.title_en}
+        </p>
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-center text-amber-600 leading-snug px-2"
+          style={{ fontFamily: "'Nunito', sans-serif" }}>
+          {bp.title_vi}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════
+// Cover page (hard cover, single page)
 // ═══════════════════════════════════════
 function CoverPage({ book, slug, audio, audioPlaying }: { book: BookData; slug: string; audio: ReturnType<typeof useAudio>; audioPlaying: string | null }) {
   return (
@@ -129,53 +187,18 @@ function CoverPage({ book, slug, audio, audioPlaying }: { book: BookData; slug: 
       </div>
       <div className="relative z-10 w-full h-full flex flex-col items-center justify-center px-6 pb-20">
         <h1
-          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black text-white text-center leading-[0.9] mb-3 tracking-tight drop-shadow-lg"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white text-center leading-[0.9] mb-3 tracking-tight drop-shadow-lg"
           style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800 }}
         >
           {book.title_en}
         </h1>
-        <p className="text-2xl sm:text-3xl md:text-4xl text-amber-100/80 mb-10" style={{ fontFamily: "'Nunito', sans-serif" }}>
+        <p className="text-xl sm:text-2xl md:text-3xl text-amber-100/80 mb-8" style={{ fontFamily: "'Nunito', sans-serif" }}>
           {book.title_vi}
         </p>
         <div className="flex items-center gap-3">
           <AudioButton label="🇬🇧 English" playing={audioPlaying === "en"} onClick={() => audioPlaying === "en" ? audio.stop() : audio.play("en", 1)} />
           <AudioButton label="🇻🇳 Tiếng Việt" playing={audioPlaying === "vi"} onClick={() => audioPlaying === "vi" ? audio.stop() : audio.play("vi", 1)} />
         </div>
-      </div>
-    </div>
-  );
-}
-
-// ═══════════════════════════════════════
-// Story page
-// ═══════════════════════════════════════
-function StoryPage({ bp, slug, audio, audioPlaying, pageNum }: { bp: BookPage; slug: string; audio: ReturnType<typeof useAudio>; audioPlaying: string | null; pageNum: number }) {
-  return (
-    <div className="w-full h-full flex flex-col bg-white">
-      <div className="w-full flex-[3] relative overflow-hidden">
-        <img src={`/books/${slug}/images/${bp.image}`} alt={`Page ${bp.number}`} className="w-full h-full object-cover" />
-      </div>
-      <div className="flex-[2] flex flex-col items-center justify-center px-8 md:px-16 lg:px-24 pb-6 relative">
-        <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-amber-400 text-white text-xs font-black" style={{ fontFamily: "'Nunito', sans-serif" }}>
-          {bp.number}
-        </span>
-        <div className="my-3">
-          <svg width="40" height="8" viewBox="0 0 40 8" fill="none">
-            <rect x="0" y="3" width="12" height="2" rx="1" fill="#f59e0b" opacity="0.5" />
-            <circle cx="20" cy="4" r="3" fill="#f59e0b" opacity="0.4" />
-            <rect x="28" y="3" width="12" height="2" rx="1" fill="#f59e0b" opacity="0.5" />
-          </svg>
-        </div>
-        <div className="flex items-center gap-3 mb-4">
-          <AudioButton label="🇬🇧 EN" playing={audioPlaying === "en"} onClick={() => audioPlaying === "en" ? audio.stop() : audio.play("en", pageNum)} />
-          <AudioButton label="🇻🇳 VI" playing={audioPlaying === "vi"} onClick={() => audioPlaying === "vi" ? audio.stop() : audio.play("vi", pageNum)} />
-        </div>
-        <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center text-stone-800 leading-snug mb-3 px-2" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700 }}>
-          {bp.title_en}
-        </p>
-        <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl text-center text-amber-600 leading-snug px-2" style={{ fontFamily: "'Nunito', sans-serif" }}>
-          {bp.title_vi}
-        </p>
       </div>
     </div>
   );
@@ -193,11 +216,11 @@ function EndPage({ book, audio, audioPlaying, totalPages }: { book: BookData; au
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/80" />
       </div>
       <div className="relative z-10 w-full h-full flex flex-col items-center justify-center px-6">
-        <div className="text-7xl sm:text-8xl md:text-9xl mb-6">📖</div>
-        <p className="text-xl sm:text-2xl md:text-3xl text-white text-center max-w-xl leading-snug mb-3" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700 }}>
+        <div className="text-6xl sm:text-7xl md:text-8xl mb-6">{book.end_emoji || "📖"}</div>
+        <p className="text-lg sm:text-xl md:text-2xl text-white text-center max-w-xl leading-snug mb-3" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700 }}>
           {book.description_en || "A story to treasure forever."}
         </p>
-        <p className="text-lg sm:text-xl md:text-2xl text-amber-200/70 text-center max-w-xl" style={{ fontFamily: "'Nunito', sans-serif" }}>
+        <p className="text-base sm:text-lg md:text-xl text-amber-200/70 text-center max-w-xl" style={{ fontFamily: "'Nunito', sans-serif" }}>
           {book.description_vi}
         </p>
         <div className="flex items-center gap-3 mt-6 mb-8">
@@ -216,38 +239,47 @@ function EndPage({ book, audio, audioPlaying, totalPages }: { book: BookData; au
 }
 
 // ═══════════════════════════════════════
-// Main reader
+// Main reader with page-flip
 // ═══════════════════════════════════════
 export default function BookPremium({ book, bookSlug }: { book: BookData; bookSlug: string }) {
   const totalPages = book.pages.length;
-  const [page, setPage] = useState(0); // 0=cover, 1..N=story, N+1=end
-  const [animating, setAnimating] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0); // 0=cover, 1..N=story pages, N+1=end
   const [uiVisible, setUiVisible] = useState(true);
   const [autoReadMode, setAutoReadMode] = useState(false);
   const [autoReadLang, setAutoReadLang] = useState<"en" | "vi">("vi");
   const uiTimer = useRef<NodeJS.Timeout | null>(null);
   const autoTimer = useRef<NodeJS.Timeout | null>(null);
+  const bookRef = useRef<any>(null); // react-pageflip instance ref
 
-  // ── Auto-read: plays audio → when done → advances page → repeats
-  const advancePage = useRef<(() => void) | null>(null);
+  // ── Auto-read: plays audio → when done advances page → repeats
+  const [autoAudioPlaying, setAutoAudioPlaying] = useState<"en" | "vi" | null>(null);
+  const autoAudioRef = useRef<HTMLAudioElement | null>(null);
+  const [normalAudioPlaying, setNormalAudioPlaying] = useState<"en" | "vi" | null>(null);
+  const normalAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const advancePageFn = useCallback(() => {
     autoTimer.current = setTimeout(() => {
-      setPage((prev) => {
-        if (prev >= totalPages) {
-          // End of book
-          setAutoReadMode(false);
-          return totalPages + 1;
+      setCurrentPage((prev) => {
+        const flipBook = bookRef.current?.pageFlip;
+        if (!flipBook) {
+          // Fallback: update state for non-flip pages only
+          if (prev >= totalPages) {
+            setAutoReadMode(false);
+            return totalPages + 1;
+          }
+          return prev + 1;
         }
+
+        // Use pageFlip to flip
+        if (prev < totalPages) {
+          // Story page: flip to next (1-based: page 0 is cover, pages 1..N are story)
+          flipBook.flipNext();
+        }
+        // Note: pageFlip handles the visual flip, we track state here
         return prev + 1;
       });
     }, 1200);
-  }, [totalPages]);
-
-  // Audio hook — auto-read variant
-  const [normalMode, setNormalMode] = useState(false);
-  const [normalAudioPlaying, setNormalAudioPlaying] = useState<"en" | "vi" | null>(null);
-  const normalAudioRef = useRef<HTMLAudioElement | null>(null);
+  }, [totalPages, bookRef]);
 
   const normalPlay = useCallback((lang: "en" | "vi", pageNum: number) => {
     if (normalAudioRef.current) normalAudioRef.current.pause();
@@ -265,9 +297,6 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
     }
     setNormalAudioPlaying(null);
   }, []);
-
-  // Auto audio
-  const autoAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const autoPlay = useCallback(
     (lang: "en" | "vi", pageNum: number, onEnd: () => void) => {
@@ -291,20 +320,39 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
     [bookSlug]
   );
 
-  const [autoAudioPlaying, setAutoAudioPlaying] = useState<"en" | "vi" | null>(null);
-
   // When in auto-read, play audio on page change
   useEffect(() => {
-    if (autoReadMode && page > 0 && page <= totalPages) {
-      autoPlay(autoReadLang, page, advancePageFn);
+    if (autoReadMode && currentPage > 0 && currentPage <= totalPages) {
+      autoPlay(autoReadLang, currentPage, advancePageFn);
       return () => {
         if (autoAudioRef.current) autoAudioRef.current.pause();
         if (autoTimer.current) clearTimeout(autoTimer.current);
       };
     }
-  }, [page, autoReadMode, autoReadLang, autoPlay, advancePageFn]);
+  }, [currentPage, autoReadMode, autoReadLang, autoPlay, advancePageFn]);
 
-  // Toggle auto-read
+  // Listen to page-flip change events
+  useEffect(() => {
+    const flipBook = bookRef.current?.pageFlip;
+    if (!flipBook) return;
+
+    const handler = (e: CustomEvent) => {
+      const newPage = e.detail; // new page index (0-based from pageFlip)
+      // pageFlip pages: 0=cover(first page), 1..pages.length = story pages
+      if (newPage !== undefined && newPage !== currentPage) {
+        setCurrentPage(newPage);
+        // If in auto-read, play audio for the new page
+        if (autoReadMode && newPage > 0 && newPage <= totalPages) {
+          if (autoTimer.current) clearTimeout(autoTimer.current);
+          autoPlay(autoReadLang, newPage, advancePageFn);
+        }
+      }
+    };
+
+    flipBook.on("flip", handler);
+    return () => flipBook.off("flip", handler);
+  }, [autoReadMode, autoReadLang, autoPlay, advancePageFn, currentPage, totalPages]);
+
   const toggleAutoRead = useCallback(() => {
     if (autoReadMode) {
       setAutoReadMode(false);
@@ -316,49 +364,31 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
     } else {
       normalStop();
       setAutoReadMode(true);
-      if (page === 0) {
-        setPage(1);
-      } else if (page > 0 && page <= totalPages) {
-        autoPlay(autoReadLang, page, advancePageFn);
+      const flipBook = bookRef.current?.pageFlip;
+      if (flipBook && currentPage > 0 && currentPage <= totalPages) {
+        autoPlay(autoReadLang, currentPage, advancePageFn);
+      } else if (flipBook && currentPage === 0) {
+        // Start from first story page
+        flipBook.flipNext();
+        setCurrentPage(1);
       }
     }
-  }, [autoReadMode, page, autoReadLang, normalStop, autoPlay, advancePageFn]);
+  }, [autoReadMode, currentPage, autoReadLang, normalStop, autoPlay, advancePageFn]);
 
-  // Switch language during auto-read
   const switchAutoLang = useCallback((lang: "en" | "vi") => {
     setAutoReadLang(lang);
-    if (page > 0 && page <= totalPages) {
+    if (currentPage > 0 && currentPage <= totalPages) {
       if (autoAudioRef.current) autoAudioRef.current.pause();
-      autoPlay(lang, page, advancePageFn);
+      autoPlay(lang, currentPage, advancePageFn);
     }
-  }, [page, autoPlay, advancePageFn]);
-
-  // ── Navigate
-  const goToPage = useCallback((newPage: number) => {
-    if (newPage < 0 || newPage > totalPages + 1 || animating) return;
-    if (autoReadMode) {
-      if (autoTimer.current) clearTimeout(autoTimer.current);
-      if (autoAudioRef.current) autoAudioRef.current.pause();
-      if (newPage > 0 && newPage <= totalPages) {
-        autoPlay(autoReadLang, newPage, advancePageFn);
-      }
-    } else {
-      normalStop();
-    }
-    setAnimating(true);
-    setPage(newPage);
-    setTimeout(() => setAnimating(false), 400);
-  }, [totalPages, animating, autoReadMode, autoReadLang, autoPlay, advancePageFn, normalStop]);
-
-  const goNext = useCallback(() => goToPage(page + 1), [goToPage, page]);
-  const goPrev = useCallback(() => goToPage(page - 1), [goToPage, page]);
+  }, [currentPage, autoPlay, advancePageFn]);
 
   // Auto-hide UI
   useEffect(() => {
     const reset = () => {
       setUiVisible(true);
       if (uiTimer.current) clearTimeout(uiTimer.current);
-      uiTimer.current = setTimeout(() => { if (page > 0) setUiVisible(false); }, 5000);
+      uiTimer.current = setTimeout(() => { if (currentPage > 0) setUiVisible(false); }, 5000);
     };
     window.addEventListener("mousemove", reset);
     window.addEventListener("touchstart", reset);
@@ -370,71 +400,114 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
       window.removeEventListener("keydown", reset);
       if (uiTimer.current) clearTimeout(uiTimer.current);
     };
-  }, [page]);
-
-  // Swipe
-  useEffect(() => {
-    let sx = 0;
-    const onStart = (e: TouchEvent) => { if (e.touches.length === 1) sx = e.touches[0].clientX; };
-    const onEnd = (e: TouchEvent) => {
-      const dx = e.changedTouches[0].clientX - sx;
-      if (Math.abs(dx) > 50) dx < 0 ? goNext() : goPrev();
-    };
-    window.addEventListener("touchstart", onStart, { passive: true });
-    window.addEventListener("touchend", onEnd, { passive: true });
-    return () => {
-      window.removeEventListener("touchstart", onStart);
-      window.removeEventListener("touchend", onEnd);
-    };
-  }, [goNext, goPrev]);
+  }, [currentPage]);
 
   // Keyboard
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); goNext(); }
-      if (e.key === "ArrowLeft") { e.preventDefault(); goPrev(); }
-      if (e.key === "a" || e.key === "A") toggleAutoRead();
+      if (e.key === "a" || e.key === "A") {
+        e.preventDefault();
+        toggleAutoRead();
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [goNext, goPrev, toggleAutoRead]);
+  }, [toggleAutoRead]);
 
-  // Wheel
+  // Wheel for page flip
   useEffect(() => {
     let lastWheel = 0;
     const onWheel = (e: WheelEvent) => {
       const now = Date.now();
       if (now - lastWheel < 1000) return;
       lastWheel = now;
-      if (Math.abs(e.deltaY) > 30) e.deltaY > 0 ? goNext() : goPrev();
-    };
-    window.addEventListener("wheel", onWheel, { passive: true });
-    return () => window.removeEventListener("wheel", onWheel);
-  }, [goNext, goPrev]);
 
-  // Show current playing state
+      // Disable scrolling on body
+      e.preventDefault();
+
+      const flipBook = bookRef.current?.pageFlip;
+      if (!flipBook) return;
+
+      if (Math.abs(e.deltaY) > 30) {
+        if (e.deltaY > 0 && currentPage < totalPages + 1) {
+          // Forward
+          if (autoReadMode) {
+            if (autoTimer.current) clearTimeout(autoTimer.current);
+            if (autoAudioRef.current) autoAudioRef.current.pause();
+          }
+          flipBook.flipNext();
+          setCurrentPage((prev) => prev + 1);
+        } else if (e.deltaY < 0 && currentPage > 0) {
+          // Back
+          if (autoReadMode) {
+            if (autoTimer.current) clearTimeout(autoTimer.current);
+            if (autoAudioRef.current) autoAudioRef.current.pause();
+          }
+          flipBook.flipPrev();
+          setCurrentPage((prev) => prev - 1);
+        }
+      }
+    };
+    window.addEventListener("wheel", onWheel, { passive: false });
+    return () => window.removeEventListener("wheel", onWheel);
+  }, [currentPage, autoReadMode]);
+
   const currentAudioPlaying = autoReadMode ? autoAudioPlaying : normalAudioPlaying;
 
-  // Content renderer
-  const renderContent = () => {
-    if (page === 0) return <CoverPage book={book} slug={bookSlug} audio={{ playing: currentAudioPlaying, play: normalPlay, stop: normalStop }} audioPlaying={currentAudioPlaying} />;
-    if (page > totalPages) return <EndPage book={book} audio={{ playing: currentAudioPlaying, play: normalPlay, stop: normalStop }} audioPlaying={currentAudioPlaying} totalPages={totalPages} />;
-    return (
-      <StoryPage
-        bp={book.pages[page - 1]}
-        slug={bookSlug}
-        audio={{ playing: currentAudioPlaying, play: normalPlay, stop: normalStop }}
-        audioPlaying={currentAudioPlaying}
-        pageNum={page}
-      />
-    );
-  };
-
   return (
-    <div className="relative w-full h-screen bg-black overflow-hidden select-none">
-      {/* Book */}
-      <div className="w-full h-full overflow-hidden" style={{ opacity: animating ? 0 : 1 }}>
-        {renderContent()}
+    <div className="relative w-full h-screen bg-black overflow-hidden select-none flex items-center justify-center">
+      {/* Book container centered */}
+      <div className="relative w-full max-w-5xl h-[90vh] md:h-[80vh]">
+        {/* React-pageflip book */}
+        <HTMLFlipBook
+          ref={(el) => { bookRef.current = el; }}
+          width={550}
+          height={733}
+          size="stretch"
+          minWidth={300}
+          maxWidth={1000}
+          minHeight={400}
+          maxHeight={1333}
+          showCover={true}
+          flippingTime={800}
+          startPage={0}
+          drawShadow={true}
+          maxShadowOpacity={0.4}
+          showPageCorners={true}
+          disableFlipByClick={false}
+          usePortrait={true}
+          startZIndex={0}
+          autoSize={true}
+          mobileScrollSupport={true}
+          clickEventForward={true}
+          useMouseEvents={true}
+          swipeDistance={50}
+          className="mx-auto"
+          style={{ boxShadow: "0 0 30px rgba(0,0,0,0.4)" }}
+        >
+          {/* Cover (hard cover - pages 0) */}
+          <div className="w-full h-full bg-stone-100">
+            <CoverPage book={book} slug={bookSlug} audio={{ playing: currentAudioPlaying, play: normalPlay, stop: normalStop, playAuto: () => {} }} audioPlaying={currentAudioPlaying} />
+          </div>
+
+          {/* Story pages */}
+          {book.pages.map((page, idx) => (
+            <div key={page.number} className="w-full h-full">
+              <PageContent
+                pageNum={idx + 1}
+                book={book}
+                slug={bookSlug}
+                audio={{ playing: currentAudioPlaying, play: normalPlay, stop: normalStop, playAuto: () => {} }}
+                audioPlaying={currentAudioPlaying}
+              />
+            </div>
+          ))}
+
+          {/* End page */}
+          <div className="w-full h-full bg-stone-100">
+            <EndPage book={book} audio={{ playing: currentAudioPlaying, play: normalPlay, stop: normalStop, playAuto: () => {} }} audioPlaying={currentAudioPlaying} totalPages={totalPages} />
+          </div>
+        </HTMLFlipBook>
       </div>
 
       {/* Top bar */}
@@ -443,7 +516,6 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
           ← Library
         </Link>
         <div className="flex items-center gap-2">
-          {/* Auto-read toggle */}
           <button
             onClick={toggleAutoRead}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-300 ${
@@ -456,7 +528,6 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
             <AutoPlayIcon active={autoReadMode} />
             <span>{autoReadMode ? "Reading…" : "Auto-Read"}</span>
           </button>
-          {/* Language selector — visible in auto-read */}
           {autoReadMode && (
             <div className="flex items-center bg-black/40 backdrop-blur-sm rounded-full overflow-hidden">
               <button onClick={() => switchAutoLang("en")} className={`px-2 py-1 text-[10px] font-bold transition-colors ${autoReadLang === "en" ? "bg-amber-500 text-white" : "text-white/60 hover:text-white"}`}>EN</button>
@@ -466,26 +537,12 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
         </div>
       </div>
 
-      {/* Nav arrows */}
-      <button onClick={goPrev}
-        className={`fixed left-3 md:left-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-stone-700 transition-all duration-300 ${page <= 0 || !uiVisible ? "opacity-0 pointer-events-none" : "opacity-100"} hover:bg-white hover:shadow-lg hover:scale-110 active:scale-90 active:bg-amber-100 cursor-pointer`}
-        style={{ touchAction: "manipulation", WebkitTapHighlightColor: "transparent" }}>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-      </button>
-      <button onClick={goNext}
-        className={`fixed right-3 md:right-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-stone-700 transition-all duration-300 ${page >= totalPages + 1 || !uiVisible ? "opacity-0 pointer-events-none" : "opacity-100"} hover:bg-white hover:shadow-lg hover:scale-110 active:scale-90 active:bg-amber-100 cursor-pointer`}
-        style={{ touchAction: "manipulation", WebkitTapHighlightColor: "transparent" }}>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7 4L13 10L7 16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-      </button>
-
       {/* Page indicator */}
       <div className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ${uiVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
         <div className="flex items-center gap-2 px-4 py-1.5 bg-black/40 backdrop-blur-sm rounded-full border border-white/10" style={{ fontFamily: "'Nunito', sans-serif" }}>
           <span className="text-[10px] text-white/60 font-bold">
-            {page === 0 ? "Cover" : page > totalPages ? "End" : page}
+            {currentPage === 0 ? "Cover" : currentPage > totalPages ? "End" : `${currentPage} / ${totalPages}`}
           </span>
-          <span className="text-[10px] text-white/30">/</span>
-          <span className="text-[10px] text-white/40">{totalPages}</span>
           {autoReadMode && <span className="text-[10px] text-amber-400 ml-1">● Auto</span>}
         </div>
       </div>
@@ -494,11 +551,21 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&display=swap');
 
-        body { overflow: hidden; position: fixed; width: 100%; }
+        body { overflow: hidden; position: fixed; width: 100%; height: 100%; }
 
-        @keyframes pulse-glow {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
-          50% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+        /* Page-flip shadow overrides for depth */
+        .stf__page {
+          box-shadow: 0 0 4px rgba(0,0,0,0.15);
+        }
+
+        /* Flip-book container adjustments */
+        .stf__block {
+          margin: 0 auto;
+        }
+
+        /* Remove page borders */
+        .stf__page {
+          border: none !important;
         }
       `}</style>
     </div>
