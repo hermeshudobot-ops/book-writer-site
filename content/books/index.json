@@ -3,12 +3,23 @@
     {
       "slug": "little-caterpillar",
       "title_en": "The Little Caterpillar",
-      "title_vi": "Chú Sâu Bướm Nhỏ",
+      "title_vi": "Ch\u00fa S\u00e2u B\u01b0\u1edbm Nh\u1ecf",
       "author": "Hung Manh Do",
       "age_range": "2-6 years",
       "cover_image": "images/page_01.jpg",
       "page_count": 16,
       "featured": true,
+      "status": "published"
+    },
+    {
+      "slug": "tico-brave-day",
+      "title_en": "Tico's Brave Day",
+      "title_vi": "Ng\u00e0y D\u0169ng C\u1ea3m C\u1ee7a Tico",
+      "author": "Hung Manh Do",
+      "age_range": "2-6 years",
+      "cover_image": "images/page_01.jpg",
+      "page_count": 16,
+      "featured": false,
       "status": "published"
     }
   ]
