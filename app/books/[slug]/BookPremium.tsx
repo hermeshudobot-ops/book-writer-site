@@ -91,7 +91,7 @@ function CoverPage({ book, slug, audioPlaying, onPlay }: { book: BookData; slug:
 // ═══════════════════════════════════════
 function StoryPage({ bp, slug, audioPlaying, onPlay }: { bp: BookPage; slug: string; audioPlaying: string | null; onPlay: (lang: string, page: number) => void }) {
   return (
-    <div className="w-full h-full flex flex-col bg-white">
+    <div className="w-full h-full flex flex-col bg-[#faf8f4]">
       <div className="w-full flex-[3] relative overflow-hidden">
         <img src={`/books/${slug}/images/${bp.image}`} alt={`Page ${bp.number}`} className="w-full h-full object-cover" />
       </div>
@@ -153,18 +153,21 @@ function EndPage({ book, audioPlaying, onPlay, totalPages }: { book: BookData; a
 }
 
 // ═══════════════════════════════════════
-// Main reader with smooth page flip animation
+// Book page flip reader — CSS 3D transforms
 // ═══════════════════════════════════════
 export default function BookPremium({ book, bookSlug }: { book: BookData; bookSlug: string }) {
   const totalPages = book.pages.length;
-  const [page, setPage] = useState(0); // 0=cover, 1..N=story, N+1=end
-  const [animating, setAnimating] = useState(false);
-  const [slideDir, setSlideDir] = useState<"next" | "prev">("next");
+  const [page, setPage] = useState(0);
+  const [flipDir, setFlipDir] = useState<"next" | "prev" | null>(null);
+  const [flipProgress, setFlipProgress] = useState(0); // 0-1
   const [uiVisible, setUiVisible] = useState(true);
   const [autoReadMode, setAutoReadMode] = useState(false);
   const [autoReadLang, setAutoReadLang] = useState<"en" | "vi">("vi");
   const uiTimer = useRef<NodeJS.Timeout | null>(null);
   const autoTimer = useRef<NodeJS.Timeout | null>(null);
+  const flipRaf = useRef<number | null>(null);
+  const flipStartRef = useRef<number>(0);
+  const FLIP_DURATION = 600; // ms
 
   // Audio
   const [audioPlaying, setAudioPlaying] = useState<"en" | "vi" | null>(null);
@@ -189,12 +192,9 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
 
   const advancePageFn = useCallback(() => {
     autoTimer.current = setTimeout(() => {
-      setPage((prev) => {
-        if (prev >= totalPages) { setAutoReadMode(false); return totalPages + 1; }
-        return prev + 1;
-      });
+      goToPage(page + 1, "next");
     }, 1200);
-  }, [totalPages]);
+  }, [page]);
 
   const autoPlayAudio = useCallback((lang: "en" | "vi", pageNum: number) => {
     if (autoAudioRef.current) autoAudioRef.current.pause();
@@ -207,13 +207,54 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
 
   advanceRef.current = advancePageFn;
 
-  // Auto-read: play audio on page change
+  // Auto-read
   useEffect(() => {
     if (autoReadMode && page > 0 && page <= totalPages) {
       autoPlayAudio(autoReadLang, page);
       return () => { if (autoAudioRef.current) autoAudioRef.current.pause(); };
     }
   }, [page, autoReadMode, autoReadLang, autoPlayAudio]);
+
+  // Page flip animation via requestAnimationFrame
+  const goToPage = useCallback((newPage: number, direction: "next" | "prev") => {
+    if (newPage < 0 || newPage > totalPages + 1 || flipDir !== null) return;
+    if (autoReadMode) {
+      if (autoTimer.current) clearTimeout(autoTimer.current);
+      if (autoAudioRef.current) autoAudioRef.current.pause();
+    } else stopAudio();
+
+    setFlipDir(direction);
+    flipStartRef.current = performance.now();
+
+    const animate = (now: number) => {
+      const elapsed = now - flipStartRef.current;
+      const progress = Math.min(elapsed / FLIP_DURATION, 1);
+      setFlipProgress(progress);
+
+      // At the halfway point, swap to the new page content
+      if (progress >= 0.5) {
+        setPage(newPage);
+      }
+
+      if (progress < 1) {
+        flipRaf.current = requestAnimationFrame(animate);
+      } else {
+        setFlipProgress(0);
+        setFlipDir(null);
+        flipRaf.current = null;
+      }
+    };
+
+    flipRaf.current = requestAnimationFrame(animate);
+  }, [totalPages, flipDir, autoReadMode, stopAudio]);
+
+  // Cleanup
+  useEffect(() => {
+    return () => { if (flipRaf.current) cancelAnimationFrame(flipRaf.current); };
+  }, []);
+
+  const goNext = useCallback(() => goToPage(page + 1, "next"), [goToPage, page]);
+  const goPrev = useCallback(() => goToPage(page - 1, "prev"), [goToPage, page]);
 
   const toggleAutoRead = useCallback(() => {
     if (autoReadMode) {
@@ -223,10 +264,10 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
     } else {
       stopAudio();
       setAutoReadMode(true);
-      if (page === 0) setPage(1);
+      if (page === 0) { setPage(1); }
       else if (page > 0 && page <= totalPages) autoPlayAudio(autoReadLang, page);
     }
-  }, [autoReadMode, page, autoReadLang, stopAudio, autoPlayAudio]);
+  }, [autoReadMode, page, autoReadLang, stopAudio, totalPages, autoPlayAudio]);
 
   const switchAutoLang = useCallback((lang: "en" | "vi") => {
     setAutoReadLang(lang);
@@ -234,23 +275,7 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
       if (autoAudioRef.current) autoAudioRef.current.pause();
       autoPlayAudio(lang, page);
     }
-  }, [page, autoPlayAudio]);
-
-  // Navigate
-  const goToPage = useCallback((newPage: number, direction: "next" | "prev") => {
-    if (newPage < 0 || newPage > totalPages + 1 || animating) return;
-    if (autoReadMode) {
-      if (autoTimer.current) clearTimeout(autoTimer.current);
-      if (autoAudioRef.current) autoAudioRef.current.pause();
-    } else stopAudio();
-    setSlideDir(direction);
-    setAnimating(true);
-    setPage(newPage);
-    setTimeout(() => setAnimating(false), 400);
-  }, [totalPages, animating, autoReadMode, stopAudio]);
-
-  const goNext = useCallback(() => goToPage(page + 1, "next"), [goToPage, page]);
-  const goPrev = useCallback(() => goToPage(page - 1, "prev"), [goToPage, page]);
+  }, [page, totalPages, autoPlayAudio]);
 
   // Auto-hide UI
   useEffect(() => {
@@ -308,18 +333,145 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
     return <StoryPage bp={book.pages[page - 1]} slug={bookSlug} audioPlaying={currentAudioPlaying} onPlay={(lang, p) => { if (lang) playAudio(lang as "en" | "vi", p); else stopAudio(); }} />;
   };
 
+  // Calculate 3D flip transforms
+  const isFlipping = flipDir !== null;
+  const flipP = flipProgress; // 0-1
+
+  // When flipping: we render TWO page layers
+  // - Back layer: the page being flipped away (current content at page)
+  //   - But page has already been swapped at progress=0.5, so we need to render the OLD page
+  // - Front layer: the page being flipped in
+  // Solution: use CSS perspective + rotateY on the flipping layer
+
+  // For forward (next): right page flips leftward, revealing page on left
+  // For backward (prev): left page flips rightward
+
+  // Since we swap page content at progress=0.5, we can't easily get the "old" page.
+  // Better approach: pre-render both + flip.
+  // Simplest correct approach: render content behind + flip curtain in front.
+
+  // The flip curtain approach:
+  // - Render current page as background
+  // - Render "curtain" div that is the next page, rotating like a page flip
+  // - Curtain starts at rotateY(0) and goes to rotateY(-180deg)
+  // - Perspective applied to container
+
+  // For the "old page" (behind the curtain), we need to know what it was.
+  // Since we already call setPage at progress >= 0.5, the content underneath 
+  // is the new page. The curtain is the old page flipping away.
+
+  // Actually, let me rethink. The classic page flip:
+  // You're viewing page N. When flipping forward:
+  // - A layer showing page N+1 rotates open from right to left
+  // - This reveals page N+1 underneath
+  // 
+  // In our case with the setTimeout setPage trick:
+  // - Background starts as page N, updates to N+1 at halfway
+  // - The curtain (rotating layer) starts as page N+1, needs to be page N at halfway
+  //
+  // This is getting overly complex. Let me use a simpler but still beautiful approach:
+  // CSS perspective page curtain flip.
+
+  // Page flip via curtain technique:
+  // The curtain layer is the PAGE BEING FLIPPED OVER.
+  // It starts covering the screen (rotateY 0deg, facing you).
+  // It rotates to -180deg (for forward flip) showing its BACK — which is the new page.
+  
+  // We need TWO renders:
+  // 1. The page underneath (what you see after flip completes)
+  // 2. The curtain (what you see during the flip, rotating away)
+  
+  // For forward flip: curtain = OLD page (page N), underneath = NEW page (page N+1)
+  // For backward flip: curtain = OLD page (page N), underneath = NEW page (page N-1)
+
+  // Since setPage fires at progress >= 0.5:
+  // - progress 0-0.49: content = PAGE N (correct, this is what's behind curtain)
+  // - progress 0.5+: content = PAGE N+1 (correct, this is what's revealed)
+  // 
+  // Curtain: always shows the OLD page. But we can't easily render it with setPage.
+  // 
+  // Workaround: render the curtain content based on the DIRECTION and PREVIOUS page.
+  // Track prevPage separately.
+  
+  const curtainPage = flipDir === "next" ? page - 1 : page + 1;
+  
+  const renderCurtainPage = () => {
+    // The page that's on the curtain (being flipped away)
+    if (curtainPage < 0 || curtainPage > totalPages + 1) return null;
+    if (curtainPage === 0) return <CoverPage book={book} slug={bookSlug} audioPlaying={null} onPlay={() => {}} />;
+    if (curtainPage > totalPages) return <EndPage book={book} audioPlaying={null} onPlay={() => {}} totalPages={totalPages} />;
+    return <StoryPage bp={book.pages[curtainPage - 1]} slug={bookSlug} audioPlaying={null} onPlay={() => {}} />;
+  };
+
+  // Easing: ease-in-out
+  const easeInOutCubic = (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const eased = easeInOutCubic(flipP);
+
+  // Curtain rotation:
+  // Next: 0 deg → -180 deg (flips from right to left)
+  // Prev: 0 deg → +180 deg (flips from left to right)
+  const rotation = flipDir === "next" ? -eased * 180 : eased * 180;
+  
+  // Shadow intensity for depth during flip
+  const shadowIntensity = Math.sin(eased * Math.PI) * 0.3;
+
   return (
-    <div className="relative w-full h-screen bg-black overflow-hidden select-none">
-      {/* Book with slide animation */}
-      <div className="w-full h-full overflow-hidden"
+    <div className="relative w-full h-screen bg-[#2a2320] overflow-hidden select-none"
+      style={{ perspective: "2000px" }}>
+      
+      {/* Underlying page (what you see after flip or before flip starts) */}
+      <div className="w-full h-full"
         style={{
-          transform: animating ? `translateX(${slideDir === "next" ? "-20px" : "20px"})` : "translateX(0)",
-          opacity: animating ? 0.3 : 1,
-          transition: "transform 0.35s ease-out, opacity 0.25s ease-out",
+          backfaceVisibility: "hidden",
         }}
       >
         {renderContent()}
       </div>
+
+      {/* Flip curtain overlay — only visible during flip */}
+      {isFlipping && (
+        <div
+          className="absolute inset-0 origin-left"
+          style={{
+            transformOrigin: flipDir === "next" ? "left center" : "right center",
+            transform: `rotateY(${rotation}deg)`,
+            transformStyle: "preserve-3d",
+            width: "100%",
+            height: "100%",
+            pointerEvents: "none",
+            zIndex: 10,
+          }}
+        >
+          {/* Front of curtain — the page being flipped away (old page) */}
+          <div className="absolute inset-0" style={{ backfaceVisibility: "hidden" }}>
+            {renderCurtainPage()}
+          </div>
+          {/* Back of curtain — shows when page has rotated past 90deg */}
+          <div className="absolute inset-0"
+            style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+          >
+            {/* Mirror of the new page — but we just show a paper-colored background 
+                or the flipped-page shadow effect */}
+            <div className="w-full h-full flex items-center justify-center"
+              style={{ background: "linear-gradient(to right, #e8e4df, #faf8f4)" }}>
+              {/* Subtle spine shadow */}
+              <div className="absolute inset-y-0 left-0 w-[20%]"
+                style={{
+                  background: "linear-gradient(to right, rgba(0,0,0,0.15), transparent)",
+                }} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Depth shadow during flip */}
+      {isFlipping && (
+        <div className="absolute inset-0 pointer-events-none z-[9]"
+          style={{
+            background: `radial-gradient(ellipse at ${flipDir === "next" ? "left" : "right"} center, transparent 60%, rgba(0,0,0,${shadowIntensity * 0.5}) 100%)`,
+            transition: "none",
+          }} />
+      )}
 
       {/* Top bar */}
       <div className={`absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-2 transition-opacity duration-500 ${uiVisible || autoReadMode ? "opacity-100" : "opacity-0"}`}>
@@ -340,12 +492,12 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
 
       {/* Nav arrows */}
       <button onClick={goPrev}
-        className={`fixed left-3 md:left-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-stone-700 transition-all duration-300 ${page <= 0 || !uiVisible ? "opacity-0 pointer-events-none" : "opacity-100"} hover:bg-white hover:shadow-lg hover:scale-110 active:scale-90 active:bg-amber-100 cursor-pointer`}
+        className={`fixed left-3 md:left-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-stone-700 transition-all duration-300 ${page <= 0 || (!uiVisible && !isFlipping) ? "opacity-0 pointer-events-none" : "opacity-100"} hover:bg-white hover:shadow-lg hover:scale-110 active:scale-90 active:bg-amber-100 cursor-pointer`}
         style={{ touchAction: "manipulation", WebkitTapHighlightColor: "transparent" }}>
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </button>
       <button onClick={goNext}
-        className={`fixed right-3 md:right-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-stone-700 transition-all duration-300 ${page >= totalPages + 1 || !uiVisible ? "opacity-0 pointer-events-none" : "opacity-100"} hover:bg-white hover:shadow-lg hover:scale-110 active:scale-90 active:bg-amber-100 cursor-pointer`}
+        className={`fixed right-3 md:right-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-stone-700 transition-all duration-300 ${page >= totalPages + 1 || (!uiVisible && !isFlipping) ? "opacity-0 pointer-events-none" : "opacity-100"} hover:bg-white hover:shadow-lg hover:scale-110 active:scale-90 active:bg-amber-100 cursor-pointer`}
         style={{ touchAction: "manipulation", WebkitTapHighlightColor: "transparent" }}>
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7 4L13 10L7 16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </button>
