@@ -1,0 +1,131 @@
+{
+  "slug": "mimi-colorful-day",
+  "title_en": "Mimi's Colorful Day",
+  "title_vi": "Một Ngày Đầy Màu Sắc Của Mimi",
+  "author": "Hung Manh Do",
+  "age_range": "2-6 years",
+  "description_en": "A little white puppy named Mimi goes on a garden adventure and discovers beautiful colors — one splash at a time. Counting, colors, and a warm bedtime hug.",
+  "description_vi": "Chú cún trắng nhỏ Mimi khám phá khu vườn và tìm thấy những màu sắc rực rỡ — mỗi vệt nước là một bất ngờ mới. Học đếm, học màu, và vòng tay yêu thương của mẹ.",
+  "theme": "counting, colors, family love, puppy, garden",
+  "cover_image": "images/page_01.jpg",
+  "format": "landscape",
+  "page_count": 16,
+  "created_at": "2026-05-04",
+  "status": "draft",
+  "featured": false,
+  "end_emoji": "🐶",
+  "pages": [
+    {
+      "number": 1,
+      "title_en": "This is Mimi. Mimi is a little white puppy with soft, fluffy fur.",
+      "title_vi": "Đây là Mimi. Mimi là một chú cún trắng nhỏ xinh với bộ lông mềm mại.",
+      "prompt": "A cute little white puppy with soft fluffy fur and big brown eyes sitting on green grass in a sunny garden, looking happy and curious, photorealistic nature photography, child-friendly and appealing, bright warm sunlight, close-up shot, shallow depth of field, clean white fur, warm backyard colors, Pixar 3D animation style",
+      "image": "page_01.jpg"
+    },
+    {
+      "number": 2,
+      "title_en": "Mimi found one red poppy. Plop! Now she had one red spot!",
+      "title_vi": "Mimi tìm thấy một bông hoa anh túc đỏ. Nhảy! Giờ chú có một vệt đỏ!",
+      "prompt": "A cute little white puppy with soft fluffy fur jumping into a puddle of red flower petals in a garden, one bright red paw print on its white fur, photorealistic nature photography, child-friendly and appealing, warm golden sunlight, close-up action shot, shallow depth of field, vibrant red flowers around, Pixar 3D animation style",
+      "image": "page_02.jpg"
+    },
+    {
+      "number": 3,
+      "title_en": "Mimi rolled through two orange daisies. Roll roll roll! Now she had three colorful spots!",
+      "title_vi": "Mimi lăn qua hai bông cúc màu cam. Lăn lăn lăn! Giờ chú có ba vệt màu!",
+      "prompt": "A cute little white puppy with soft fluffy fur rolling happily through bright orange daisy flowers in a sunny garden, two orange paw petal marks on its white fur, playful spinning motion, photorealistic nature photography, child-friendly and appealing, warm golden light, close-up action shot, shallow depth of field, Pixar 3D animation style",
+      "image": "page_03.jpg"
+    },
+    {
+      "number": 4,
+      "title_en": "Mimi chased three yellow bees. Buzz buzz zoom! Now she had six colorful spots!",
+      "title_vi": "Mimi đuổi theo ba con ong vàng. Vo vo vo! Giờ chú có sáu vệt màu!",
+      "prompt": "A cute little white puppy with soft fluffy fur bouncing around yellow flowers as three little bees fly overhead, yellow pollen dust on its white fur, three yellow spots showing, photorealistic nature photography, child-friendly and appealing, bright sunny garden, close-up shot, shallow depth of field, Pixar 3D animation style",
+      "image": "page_04.jpg"
+    },
+    {
+      "number": 5,
+      "title_en": "Mimi splashed in four green puddles. Splash splash! Now she had ten colorful spots!",
+      "title_vi": "Mimi nhảy vào bốn vũng nước xanh. Ùm ùm! Giờ chú có mười vệt màu!",
+      "prompt": "A cute little white puppy with soft fluffy fur splashing joyfully in four green puddles in a garden, water splashing mid-air, green mud spots and previous colorful spots on white fur, photorealistic nature photography, child-friendly and appealing, natural daylight, action shot, shallow depth of field, lush green garden, Pixar 3D animation style",
+      "image": "page_05.jpg"
+    },
+    {
+      "number": 6,
+      "title_en": "Mimi ran into five blue butterflies. Flap flap flutter! Now she had fifteen colorful spots!",
+      "title_vi": "Mimi chạy vào năm chú bướm xanh. Bay bay bay! Giờ chú có mười lăm vệt màu!",
+      "prompt": "A cute little white puppy with soft fluffy fur surrounded by five beautiful blue butterflies in a garden, covered in many colorful spots (red orange yellow green blue), looking amazed and happy, photorealistic nature photography, child-friendly and appealing, magical bright lighting, close-up shot, shallow depth of field, vibrant garden scene, Pixar 3D animation style",
+      "image": "page_06.jpg"
+    },
+    {
+      "number": 7,
+      "title_en": "\"Wow!\" said the garden bird. \"You are a rainbow puppy!\"",
+      "title_vi": "\"Wow!\" chim khu vườn nói. \"Cháu là cún cầu vồng rồi!\"",
+      "prompt": "A cute little white puppy with soft fluffy fur covered in colorful spots (red orange yellow green blue) standing proudly in a garden while a small friendly garden bird looks at it from a low branch in amazement, photorealistic nature photography, child-friendly and appealing, warm afternoon sunlight, close-up shot, shallow depth of field, Pixar 3D animation style",
+      "image": "page_07.jpg"
+    },
+    {
+      "number": 8,
+      "title_en": "Mimi smiled. \"I am the most colorful puppy ever!\"",
+      "title_vi": "Mimi mỉm cười. \"Chú là cún con xinh đẹp nhất trên đời!\"",
+      "prompt": "A cute little white puppy with soft fluffy fur covered in vibrant colorful spots standing tall and proud with a big happy smile in a beautiful garden, sunbeams through leaves, photorealistic nature photography, child-friendly and appealing, warm golden hour lighting, close-up hero shot, shallow depth of field, Pixar 3D animation style",
+      "image": "page_08.jpg"
+    },
+    {
+      "number": 9,
+      "title_en": "The sun began to set. Mimi was tired. Time to go home.",
+      "title_vi": "Mặt trời bắt đầu lặn. Mimi mệt rồi. Giờ về nhà thôi.",
+      "prompt": "A cute little white puppy with soft fluffy fur covered in colorful spots walking slowly home along a garden path, yawning, looking tired but content, photorealistic nature photography, child-friendly and appealing, warm sunset golden-orange lighting, long shadows, close-up shot, shallow depth of field, cozy garden path, Pixar 3D animation style",
+      "image": "page_09.jpg"
+    },
+    {
+      "number": 10,
+      "title_en": "Mama saw Mimi. \"Oh my!\" she laughed. \"Time for a bath!\"",
+      "title_vi": "Mẹ nhìn thấy Mimi. \"Ối!\" mẹ cười. \"Đến giờ tắm rồi con!\"",
+      "prompt": "A cute little white puppy with soft fluffy fur covered in colorful spots standing next to a larger white mother dog in a cozy garden yard, mother dog looking amused and surprised with an open mouth laugh, photorealistic nature photography, child-friendly and appealing, warm late afternoon lighting, medium shot, shallow depth of field, heartwarming family moment, Pixar 3D animation style",
+      "image": "page_10.jpg"
+    },
+    {
+      "number": 11,
+      "title_en": "Splash! Mama gave Mimi a bubbly bath. Scrub scrub scrub!",
+      "title_vi": "Ùm! Mẹ tắm cho Mimi đầy bọt xà phòng. Cọ cọ cọ!",
+      "prompt": "A cute little white puppy with soft fluffy fur covered in warm bubbly foam inside a garden tub, colorful soap bubbles floating all around, mother dog watching nearby lovingly, photorealistic nature photography, child-friendly and appealing, bright warm bathroom light, close-up shot, shallow depth of field, playful bath scene with rainbow bubbles, Pixar 3D animation style",
+      "image": "page_11.jpg"
+    },
+    {
+      "number": 12,
+      "title_en": "All the colors washed away. Mimi was white and fluffy again!",
+      "title_vi": "Tất cả màu sắc trôi đi hết. Mimi trắng sạch và fluffy như mới!",
+      "prompt": "A cute little white puppy with soft fluffy fur completely clean and bright white again, shaking water off after a bath, water droplets frozen mid-air, sparkling clean in warm garden sunlight, photorealistic nature photography, child-friendly and appealing, bright warm natural light, close-up action shot, shallow depth of field, fresh and happy, Pixar 3D animation style",
+      "image": "page_12.jpg"
+    },
+    {
+      "number": 13,
+      "title_en": "Mama wrapped Mimi in a warm towel. \"You are beautiful — all colors or none.\"",
+      "title_vi": "Mẹ quấn Mimi trong chiếc khăn ấm. \"Con xinh đẹp — dù có màu hay không có màu.\"",
+      "prompt": "A cute little white puppy with soft fluffy fur clean and dry being gently wrapped in a warm soft towel by a larger white mother dog, mother dog nuzzling the puppy with love, photorealistic nature photography, child-friendly and appealing, warm cozy golden lighting, close-up tender moment, shallow depth of field, heartwarming family scene, Pixar 3D animation style",
+      "image": "page_13.jpg"
+    },
+    {
+      "number": 14,
+      "title_en": "Mimi closed her eyes, dreaming in rainbow colors.",
+      "title_vi": "Mimi nhắm mắt lại, mơ về những màu cầu vồng.",
+      "prompt": "A cute little clean white puppy with soft fluffy fur sleeping peacefully in a cozy basket, curled up with a gentle smile, dreamy soft rainbow colored light and floating sparkles around, photorealistic nature photography, child-friendly and appealing, soft warm amber moonlight, close-up shot, shallow depth of field, dreamlike magical atmosphere, Pixar 3D animation style",
+      "image": "page_14.jpg"
+    },
+    {
+      "number": 15,
+      "title_en": "Every color is beautiful — but home is where you shine the brightest.",
+      "title_vi": "Mỗi màu đều xinh đẹp — nhưng nhà là nơi con tỏa sáng nhất.",
+      "prompt": "A cute little white puppy with soft fluffy fur sleeping peacefully next to a larger white mother dog in a warm cozy garden bed, moonlight streaming through a window, photorealistic nature photography, child-friendly and appealing, soft blue moonlight with warm amber accents, wide shot, shallow depth of field, serene peaceful ending, Pixar 3D animation style",
+      "image": "page_15.jpg"
+    },
+    {
+      "number": 16,
+      "title_en": "The End",
+      "title_vi": "Hết",
+      "prompt": "A beautiful garden scene at dusk with warm orange and purple sunset sky, a clean white puppy curled up sleeping peacefully on soft grass, small flowers gently glowing in the twilight, peaceful ending atmosphere, photorealistic nature photography, child-friendly and appealing, soft magical twilight lighting, wide panoramic shot, serene, Pixar 3D animation style",
+      "image": "page_16.jpg"
+    }
+  ]
+}
