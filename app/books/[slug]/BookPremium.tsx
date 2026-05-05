@@ -91,31 +91,36 @@ function CoverPage({ book, slug, audioPlaying, onPlay }: { book: BookData; slug:
 // ═══════════════════════════════════════
 function StoryPage({ bp, slug, audioPlaying, onPlay }: { bp: BookPage; slug: string; audioPlaying: string | null; onPlay: (lang: string, page: number) => void }) {
   return (
-    <div className="w-full h-full flex flex-col bg-[#faf8f4]">
-      <div className="w-full flex-[3] relative overflow-hidden">
-        <img src={`/books/${slug}/images/${bp.image}`} alt={`Page ${bp.number}`} className="w-full h-full object-cover" />
-      </div>
-      <div className="flex-[2] flex flex-col items-center justify-center px-8 md:px-16 lg:px-24 pb-6 relative">
-        <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-amber-400 text-white text-xs font-black" style={{ fontFamily: "'Nunito', sans-serif" }}>
-          {bp.number}
-        </span>
-        <div className="my-3">
-          <svg width="40" height="8" viewBox="0 0 40 8" fill="none">
-            <rect x="0" y="3" width="12" height="2" rx="1" fill="#f59e0b" opacity="0.5" />
-            <circle cx="20" cy="4" r="3" fill="#f59e0b" opacity="0.4" />
-            <rect x="28" y="3" width="12" height="2" rx="1" fill="#f59e0b" opacity="0.5" />
-          </svg>
+    <div className="w-full h-full relative bg-[#1a1510] overflow-hidden">
+      {/* Full-screen image, contained (no stretch, black bars fill sides) */}
+      <img src={`/books/${slug}/images/${bp.image}`} alt={`Page ${bp.number}`}
+        className="w-full h-full object-contain" />
+
+      {/* Page number badge — top-left corner */}
+      <span className="absolute top-3 left-3 inline-flex items-center justify-center w-7 h-7 rounded-full bg-amber-400 text-white text-xs font-black shadow-md"
+        style={{ fontFamily: "'Nunito', sans-serif" }}>
+        {bp.number}
+      </span>
+
+      {/* Text overlay bar — bottom, with gradient backdrop */}
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent pt-10 pb-4 px-4 md:px-8">
+        <div className="max-w-3xl mx-auto text-center">
+          {/* Audio buttons */}
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <AudioButton label="🇬🇧 EN" playing={audioPlaying === "en"} onClick={() => audioPlaying === "en" ? onPlay("", bp.number) : onPlay("en", bp.number)} />
+            <AudioButton label="🇻🇳 VI" playing={audioPlaying === "vi"} onClick={() => audioPlaying === "vi" ? onPlay("", bp.number) : onPlay("vi", bp.number)} />
+          </div>
+          {/* English text — large, white, bold with text-shadow for readability */}
+          <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-white text-center leading-snug mb-1"
+            style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, textShadow: "0 2px 8px rgba(0,0,0,0.5)" }}>
+            {bp.title_en}
+          </p>
+          {/* Vietnamese text — slightly smaller, warm amber */}
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-amber-200/90 text-center leading-snug"
+            style={{ fontFamily: "'Nunito', sans-serif", textShadow: "0 2px 8px rgba(0,0,0,0.5)" }}>
+            {bp.title_vi}
+          </p>
         </div>
-        <div className="flex items-center gap-3 mb-4">
-          <AudioButton label="🇬🇧 EN" playing={audioPlaying === "en"} onClick={() => audioPlaying === "en" ? onPlay("", bp.number) : onPlay("en", bp.number)} />
-          <AudioButton label="🇻🇳 VI" playing={audioPlaying === "vi"} onClick={() => audioPlaying === "vi" ? onPlay("", bp.number) : onPlay("vi", bp.number)} />
-        </div>
-        <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center text-stone-800 leading-snug mb-3 px-2" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700 }}>
-          {bp.title_en}
-        </p>
-        <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl text-center text-amber-600 leading-snug px-2" style={{ fontFamily: "'Nunito', sans-serif" }}>
-          {bp.title_vi}
-        </p>
       </div>
     </div>
   );
