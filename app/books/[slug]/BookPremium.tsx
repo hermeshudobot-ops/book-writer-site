@@ -441,122 +441,94 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
 
   // Determine what page to render as background
   const displayPage = flipTarget !== null ? flipTarget : page;
-
   return (
     <div className="relative w-full h-screen bg-[#2a2320] overflow-hidden select-none">
-      {/* Tap zones overlay — only active when reading (not on cover) */}
-      <div
-        className={`absolute inset-0 z-40 transition-opacity duration-300 ${
-          page > 0 ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
-        onClick={page > 0 ? handleTap : undefined}
-        onTouchEnd={page > 0 ? handleTap : undefined}
-        style={{ touchAction: "manipulation" }}
-      >
-        <div className="absolute inset-y-0 left-0 w-[25%] pointer-events-none" />
-        <div className="absolute inset-y-0 right-0 w-[25%] pointer-events-none" />
-      </div>
 
-      {/* Background page */}
-      <div className="absolute inset-0 pointer-events-none">
-        {flipTarget !== null && flipFromPage !== null ? (
-          <>
-            <Fragment>
-              {/* New page in background */}
-              {flipTarget === 0 ? (
-                <CoverPage
-                  book={book}
-                  slug={bookSlug}
-                  chosenLang={chosenLang}
-                  onChooseLang={setChosenLang}
-                  onStartReading={() => handleNavigate(1, "next")}
-                />
-              ) : flipTarget > totalPages ? (
-                <EndPage book={book} language={lang} />
-              ) : (
-                <StoryPage
-                  bp={book.pages[flipTarget - 1]}
-                  slug={bookSlug}
-                  isPlaying={audioActive && flipTarget === page}
-                  language={lang}
-                />
-              )}
-              {/* Old page as flip overlay */}
-              <div
-                className="absolute inset-0"
-                style={{
-                  transformOrigin:
-                    flipDir === "next" ? "left center" : "right center",
-                  transform: `perspective(2000px) rotateY(${
-                    flipDir === "next" ? -180 : 180
-                  }deg)`,
-                  transition: `transform ${FLIP_DURATION}ms cubic-bezier(0.645, 0.045, 0.355, 1.0)`,
-                  backfaceVisibility: "hidden",
-                  transformStyle: "preserve-3d",
-                  zIndex: 10,
-                  pointerEvents: "none",
-                }}
-              >
-                {flipFromPage === 0 ? (
-                  <CoverPage
-                    book={book}
-                    slug={bookSlug}
-                    chosenLang={chosenLang}
-                    onChooseLang={() => {}}
-                    onStartReading={() => {}}
-                  />
-                ) : flipFromPage > totalPages ? (
-                  <EndPage book={book} language={lang} />
-                ) : (
-                  <StoryPage
-                    bp={book.pages[flipFromPage - 1]}
-                    slug={bookSlug}
-                    isPlaying={false}
-                    language={lang}
-                  />
-                )}
-                <div
-                  className={`absolute inset-y-0 ${
-                    flipDir === "next" ? "left-0" : "right-0"
-                  } w-[25%] pointer-events-none`}
-                  style={{
-                    background:
-                      flipDir === "next"
-                        ? "linear-gradient(to right, rgba(0,0,0,0.12), transparent)"
-                        : "linear-gradient(to left, rgba(0,0,0,0.12), transparent)",
-                  }}
-                />
-              </div>
-            </Fragment>
-          </>
-        ) : (
-          <Fragment>
-            {page === 0 ? (
-              <CoverPage
-                book={book}
-                slug={bookSlug}
-                chosenLang={chosenLang}
-                onChooseLang={setChosenLang}
-                onStartReading={() => handleNavigate(1, "next")}
-              />
-            ) : page > totalPages ? (
-              <EndPage book={book} language={lang} />
-            ) : (
-              <StoryPage
-                bp={book.pages[page - 1]}
-                slug={bookSlug}
-                isPlaying={audioActive && page === displayPage}
-                language={lang}
-              />
-            )}
-          </Fragment>
+      {/* Page content — always on top */}
+      <div className="absolute inset-0 z-[1]">
+        {page === 0 && (
+          <CoverPage
+            book={book}
+            slug={bookSlug}
+            chosenLang={chosenLang}
+            onChooseLang={setChosenLang}
+            onStartReading={() => handleNavigate(1, "next")}
+          />
+        )}
+        {page > 0 && page <= totalPages && (
+          <StoryPage
+            bp={book.pages[page - 1]}
+            slug={bookSlug}
+            isPlaying={audioActive && page === displayPage}
+            language={lang}
+          />
+        )}
+        {page > totalPages && (
+          <EndPage book={book} language={lang} />
         )}
       </div>
+
+      {/* Flip curtain overlay */}
+      {flipDir !== null && flipFromPage !== null && (
+        <div
+          className="absolute inset-0"
+          style={{
+            transformOrigin: flipDir === "next" ? "left center" : "right center",
+            transform: `perspective(2000px) rotateY(${flipDir === "next" ? -180 : 180}deg)`,
+            transition: `transform ${FLIP_DURATION}ms cubic-bezier(0.645, 0.045, 0.355, 1.0)`,
+            backfaceVisibility: "hidden",
+            transformStyle: "preserve-3d",
+            zIndex: 10,
+            pointerEvents: "none",
+          }}
+        >
+          {flipFromPage === 0 ? (
+            <CoverPage
+              book={book}
+              slug={bookSlug}
+              chosenLang={chosenLang}
+              onChooseLang={() => {}}
+              onStartReading={() => {}}
+            />
+          ) : flipFromPage > totalPages ? (
+            <EndPage book={book} language={lang} />
+          ) : (
+            <StoryPage
+              bp={book.pages[flipFromPage - 1]}
+              slug={bookSlug}
+              isPlaying={false}
+              language={lang}
+            />
+          )}
+          <div
+            className={`absolute inset-y-0 ${flipDir === "next" ? "left-0" : "right-0"} w-[25%] pointer-events-none`}
+            style={{
+              background:
+                flipDir === "next"
+                  ? "linear-gradient(to right, rgba(0,0,0,0.12), transparent)"
+                  : "linear-gradient(to left, rgba(0,0,0,0.12), transparent)",
+            }}
+          />
+        </div>
+      )}
+
+      {/* Tap zones overlay — only active when reading (not on cover) */}
+      {page > 0 && (
+        <div
+          className="absolute inset-0 z-[5]"
+          onClick={handleTap}
+          onTouchEnd={handleTap}
+          style={{ touchAction: "manipulation" }}
+        >
+          <div className="absolute inset-y-0 left-0 w-[25%] pointer-events-none" />
+          <div className="absolute inset-y-0 right-0 w-[25%] pointer-events-none" />
+        </div>
+      )}
 
       {/* Top bar when reading */}
       {page > 0 && page <= totalPages && (
         <div
-          className={`absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-2 transition-opacity duration-500 ${
+          className={`absolute top-0 left-0 right-0 z-[20] flex items-center justify-between px-4 py-2 transition-opacity duration-500 ${
             showUI ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
         >
@@ -578,9 +550,7 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
             <button
               onClick={() => (autoAdvance.current = !autoAdvance.current)}
               className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-bold transition-all ${
-                autoAdvance.current
-                  ? "bg-amber-500 text-white"
-                  : "bg-black/40 text-white/60"
+                autoAdvance.current ? "bg-amber-500 text-white" : "bg-black/40 text-white/60"
               }`}
               style={{ fontFamily: "'Nunito', sans-serif" }}
             >
@@ -590,53 +560,38 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
         </div>
       )}
 
-      {/* Navigation arrows */}
+      {/* Navigation arrows — only when reading */}
       {page > 0 && page <= totalPages && (
         <>
           <div
-            className={`absolute left-0 top-0 bottom-0 w-[25%] md:w-[20%] z-30 flex items-center justify-start pl-2 md:pl-3 pointer-events-none transition-opacity duration-500 ${
+            className={`absolute left-0 top-0 bottom-0 w-[25%] md:w-[20%] z-[15] flex items-center justify-start pl-2 md:pl-3 pointer-events-none transition-opacity duration-500 ${
               showUI ? "opacity-100" : "opacity-0"
             }`}
           >
             <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/40 backdrop-blur-sm flex items-center justify-center text-white/70">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path
-                  d="M13 4L7 10L13 16"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
+                <path d="M13 4L7 10L13 16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
           </div>
           <div
-            className={`absolute right-0 top-0 bottom-0 w-[25%] md:w-[20%] z-30 flex items-center justify-end pr-2 md:pr-3 pointer-events-none transition-opacity duration-500 ${
+            className={`absolute right-0 top-0 bottom-0 w-[25%] md:w-[20%] z-[15] flex items-center justify-end pr-2 md:pr-3 pointer-events-none transition-opacity duration-500 ${
               showUI ? "opacity-100" : "opacity-0"
             }`}
           >
             <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/40 backdrop-blur-sm flex items-center justify-center text-white/70">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path
-                  d="M7 4L13 10L7 16"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
+                <path d="M7 4L13 10L7 16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
           </div>
           <div
-            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none transition-opacity duration-500 flex items-center gap-2 text-white/20 ${
+            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[15] pointer-events-none transition-opacity duration-500 flex items-center gap-2 text-white/20 ${
               showUI ? "opacity-100" : "opacity-0"
             }`}
           >
             <SpeakerIcon size={16} />
-            <span
-              className="text-xs"
-              style={{ fontFamily: "'Nunito', sans-serif" }}
-            >
+            <span className="text-xs" style={{ fontFamily: "'Nunito', sans-serif" }}>
               {lang === "en" ? "Tap to replay" : "Chạm để nghe lại"}
             </span>
           </div>
@@ -646,7 +601,7 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
       {/* Page indicator */}
       {page > 0 && page <= totalPages && (
         <div
-          className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ${
+          className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-[20] transition-all duration-500 ${
             showUI ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
           }`}
         >
@@ -659,8 +614,7 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
             </span>
             {audioActive && (
               <span className="text-[10px] text-amber-400 ml-1 animate-pulse">
-                🔊{" "}
-                {lang === "en" ? "Reading" : "Đang đọc"}
+                🔊 {lang === "en" ? "Reading" : "Đang đọc"}
               </span>
             )}
           </div>
