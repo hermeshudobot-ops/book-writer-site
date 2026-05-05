@@ -26,61 +26,51 @@ interface BookData {
 }
 
 // ═══════════════════════════════════════
-// SVG Icon components
+// SVG Icons
 // ═══════════════════════════════════════
-function PlayIcon() {
-  return <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l10 6-10 6V4z" /></svg>;
-}
-function PauseIcon() {
-  return <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M5 4h3v12H5V4zm7 0h3v12h-3V4z" /></svg>;
-}
-function AutoPlayIcon({ active }: { active: boolean }) {
+function SpeakerIcon({ size = 24 }: { size?: number }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M5 3l14 9-14 9V3z" fill={active ? "currentColor" : "none"} />
-      <rect x="19" y="6" width="3" height="12" rx="1" fill="currentColor" />
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
     </svg>
   );
 }
-function AudioButton({ label, playing, onClick }: { label: string; playing: boolean; onClick: () => void }) {
+function SpeakerOffIcon({ size = 24 }: { size?: number }) {
   return (
-    <button
-      onClick={onClick}
-      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-300 select-none ${
-        playing
-          ? "bg-amber-400 text-white scale-105 shadow-lg shadow-amber-400/30"
-          : "bg-white/90 text-stone-600 hover:bg-amber-100 hover:text-amber-700 border border-stone-200"
-      }`}
-      style={{ fontFamily: "'Nunito', sans-serif", touchAction: "manipulation", WebkitTapHighlightColor: "transparent" }}
-    >
-      {playing ? <PauseIcon /> : <PlayIcon />}
-      <span>{label}</span>
-    </button>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+      <line x1="23" y1="9" x2="17" y2="15" />
+      <line x1="17" y1="9" x2="23" y2="15" />
+    </svg>
   );
 }
 
 // ═══════════════════════════════════════
 // Cover page
 // ═══════════════════════════════════════
-function CoverPage({ book, slug, audioPlaying, onPlay }: { book: BookData; slug: string; audioPlaying: string | null; onPlay: (lang: string, page: number) => void }) {
+function CoverPage({ book, slug, isPlaying }: { book: BookData; slug: string; isPlaying: boolean }) {
   return (
     <div className="w-full h-full relative overflow-hidden">
       <div className="absolute inset-0">
         <img src={`/books/${slug}/images/${book.pages[0]?.image}`} alt="" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/15 to-black/70" />
       </div>
-      <div className="relative z-10 w-full h-full flex flex-col items-center justify-center px-6 pb-20">
+      <div className="relative z-10 w-full h-full flex flex-col items-center justify-center px-6 pb-28">
         <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black text-white text-center leading-[0.9] mb-3 tracking-tight drop-shadow-lg"
           style={{ fontFamily: "'Nunito', sans-serif" }}>
           {book.title_en}
         </h1>
-        <p className="text-2xl sm:text-3xl md:text-4xl text-amber-100/80 mb-10" style={{ fontFamily: "'Nunito', sans-serif" }}>
+        <p className="text-2xl sm:text-3xl md:text-4xl text-amber-100/80 text-center" style={{ fontFamily: "'Nunito', sans-serif" }}>
           {book.title_vi}
         </p>
-        <div className="flex items-center gap-3">
-          <AudioButton label="🇬🇧 English" playing={audioPlaying === "en"} onClick={() => audioPlaying === "en" ? onPlay("", 0) : onPlay("en", 1)} />
-          <AudioButton label="🇻🇳 Tiếng Việt" playing={audioPlaying === "vi"} onClick={() => audioPlaying === "vi" ? onPlay("", 0) : onPlay("vi", 1)} />
-        </div>
+        {isPlaying && (
+          <div className="mt-6 flex items-center gap-2 text-amber-300 animate-pulse">
+            <SpeakerIcon size={20} />
+            <span className="text-sm font-bold" style={{ fontFamily: "'Nunito', sans-serif" }}>Đang đọc...</span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -89,7 +79,7 @@ function CoverPage({ book, slug, audioPlaying, onPlay }: { book: BookData; slug:
 // ═══════════════════════════════════════
 // Story page
 // ═══════════════════════════════════════
-function StoryPage({ bp, slug, audioPlaying, onPlay }: { bp: BookPage; slug: string; audioPlaying: string | null; onPlay: (lang: string, page: number) => void }) {
+function StoryPage({ bp, slug, isPlaying }: { bp: BookPage; slug: string; isPlaying: boolean }) {
   return (
     <div className="w-full h-full relative bg-[#1a1510] overflow-hidden">
       <img src={`/books/${slug}/images/${bp.image}`} alt={`Page ${bp.number}`}
@@ -98,17 +88,20 @@ function StoryPage({ bp, slug, audioPlaying, onPlay }: { bp: BookPage; slug: str
         style={{ fontFamily: "'Nunito', sans-serif" }}>
         {bp.number}
       </span>
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent pt-10 pb-4 px-4 md:px-8">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <AudioButton label="🇬🇧 EN" playing={audioPlaying === "en"} onClick={() => audioPlaying === "en" ? onPlay("", bp.number) : onPlay("en", bp.number)} />
-            <AudioButton label="🇻🇳 VI" playing={audioPlaying === "vi"} onClick={() => audioPlaying === "vi" ? onPlay("", bp.number) : onPlay("vi", bp.number)} />
-          </div>
+      {/* Now playing indicator */}
+      {isPlaying && (
+        <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-400/90 text-white animate-pulse">
+          <SpeakerIcon size={14} />
+          <span className="text-[10px] font-black" style={{ fontFamily: "'Nunito', sans-serif" }}>Đang đọc</span>
+        </div>
+      )}
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent pt-12 pb-8 px-4 md:px-8">
+        <div className="max-w-3xl mx-auto text-center pb-4">
           <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-white text-center leading-snug mb-1"
             style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, textShadow: "0 2px 8px rgba(0,0,0,0.5)" }}>
             {bp.title_en}
           </p>
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-amber-200/90 text-center leading-snug pb-10"
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-amber-200/90 text-center leading-snug"
             style={{ fontFamily: "'Nunito', sans-serif", textShadow: "0 2px 8px rgba(0,0,0,0.5)" }}>
             {bp.title_vi}
           </p>
@@ -121,8 +114,8 @@ function StoryPage({ bp, slug, audioPlaying, onPlay }: { bp: BookPage; slug: str
 // ═══════════════════════════════════════
 // End page
 // ═══════════════════════════════════════
-function EndPage({ book, audioPlaying, onPlay, totalPages }: { book: BookData; audioPlaying: string | null; onPlay: (lang: string, page: number) => void; totalPages: number }) {
-  const last = totalPages;
+function EndPage({ book, isPlaying }: { book: BookData; isPlaying: boolean }) {
+  const last = book.pages.length;
   return (
     <div className="w-full h-full relative overflow-hidden">
       <div className="absolute inset-0">
@@ -137,250 +130,224 @@ function EndPage({ book, audioPlaying, onPlay, totalPages }: { book: BookData; a
         <p className="text-lg sm:text-xl md:text-2xl text-amber-200/70 text-center max-w-xl" style={{ fontFamily: "'Nunito', sans-serif" }}>
           {book.description_vi}
         </p>
-        <div className="flex items-center gap-3 mt-6 mb-8">
-          <AudioButton label="🇬🇧 EN" playing={audioPlaying === "en"} onClick={() => audioPlaying === "en" ? onPlay("", last) : onPlay("en", last)} />
-          <AudioButton label="🇻🇳 VI" playing={audioPlaying === "vi"} onClick={() => audioPlaying === "vi" ? onPlay("", last) : onPlay("vi", last)} />
-        </div>
-        <div className="flex items-center gap-3"><div className="w-12 h-px bg-amber-400/40" /><div className="w-12 h-px bg-amber-400/40" /></div>
-        <p className="mt-6 text-xs text-white/30" style={{ fontFamily: "'Nunito', sans-serif" }}>{book.title_en} · © 2026</p>
-        <Link href="/" className="mt-6 px-5 py-2 border border-white/20 text-white/60 rounded-full text-xs hover:bg-white/10 transition-all">← Back to Library</Link>
+        <div className="flex items-center gap-3 mt-4 mb-6"><div className="w-12 h-px bg-amber-400/40" /><div className="w-12 h-px bg-amber-400/40" /></div>
+        <p className="text-xs text-white/30" style={{ fontFamily: "'Nunito', sans-serif" }}>{book.title_en} · © 2026</p>
+        <Link href="/" className="mt-6 px-5 py-2 border border-white/20 text-white/60 rounded-full text-xs hover:bg-white/10 transition-all">← Về Thư Viện</Link>
       </div>
     </div>
   );
 }
 
 // ═══════════════════════════════════════
-// Render content for a given page number
+// Render content for a page number
 // ═══════════════════════════════════════
-function renderPageContent(
-  pageNum: number,
-  totalPages: number,
-  book: BookData,
-  bookSlug: string,
-  audioPlaying: string | null,
-  onPlay: (lang: string, page: number) => void
-) {
-  if (pageNum === 0) return <CoverPage book={book} slug={bookSlug} audioPlaying={audioPlaying} onPlay={onPlay} />;
-  if (pageNum > totalPages) return <EndPage book={book} audioPlaying={audioPlaying} onPlay={onPlay} totalPages={totalPages} />;
-  return <StoryPage bp={book.pages[pageNum - 1]} slug={bookSlug} audioPlaying={audioPlaying} onPlay={onPlay} />;
+function renderPageContent(pg: number, total: number, book: BookData, slug: string, playing: boolean) {
+  if (pg === 0) return <CoverPage book={book} slug={slug} isPlaying={playing} />;
+  if (pg > total) return <EndPage book={book} isPlaying={playing} />;
+  return <StoryPage bp={book.pages[pg - 1]} slug={slug} isPlaying={playing} />;
 }
 
-// Flip animation duration in ms
-const FLIP_DURATION = 950;
-
 // ═══════════════════════════════════════
-// Main reader with proper 3D book page flip
+// MAIN: Kid-friendly reader — auto-play audio, tap to navigate
 // ═══════════════════════════════════════
 export default function BookPremium({ book, bookSlug }: { book: BookData; bookSlug: string }) {
   const totalPages = book.pages.length;
 
-  // Displayed page number (only updates AFTER animation completes)
+  // Core state
   const [page, setPage] = useState(0);
+  const [lang, setLang] = useState<"en" | "vi">("vi"); // Last chosen language, persists
 
-  // Animation state — null means idle
+  // Flip animation
   const [flipDir, setFlipDir] = useState<"next" | "prev" | null>(null);
-  // Page being revealed (background, shown underneath the curtain)
   const [flipNewPage, setFlipNewPage] = useState<number | null>(null);
 
-  // UI state
-  const [uiVisible, setUiVisible] = useState(true);
-
-  // Auto-read
-  const [autoReadMode, setAutoReadMode] = useState(false);
-  const [autoReadLang, setAutoReadLang] = useState<"en" | "vi">("vi");
-  const autoTimer = useRef<NodeJS.Timeout | null>(null);
-
-  // Audio
-  const uiTimer = useRef<NodeJS.Timeout | null>(null);
-  const [audioPlaying, setAudioPlaying] = useState<"en" | "vi" | null>(null);
+  // Audio — always play on page change (kid-friendly default)
+  const [audioActive, setAudioActive] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const autoAudioRef = useRef<HTMLAudioElement | null>(null);
-  const [autoAudioPlaying, setAutoAudioPlaying] = useState<"en" | "vi" | null>(null);
-  const advanceRef = useRef<(() => void) | null>(null);
+  const flipTimerRef = useRef<number | null>(null);
+  const autoAdvanceRef = useRef<number | null>(null);
+  const [autoAdvance, setAutoAdvance] = useState(true); // Auto-advance after audio ends
 
-  const playAudio = useCallback((lang: "en" | "vi", pageNum: number) => {
-    if (audioRef.current) audioRef.current.pause();
-    setAudioPlaying(lang);
-    const audio = new Audio(`/books/${bookSlug}/audio/page_${String(pageNum).padStart(2, "0")}_${lang}.mp3`);
+  // UI
+  const [showUI, setShowUI] = useState(true);
+  const uiTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const FLIP_DURATION = 800;
+
+  // Play audio for a given page
+  const playAudio = useCallback((pg: number, language: "en" | "vi", autoNext = false) => {
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+
+    const audioNum = pg <= totalPages && pg > 0 ? pg : 1;
+    const src = `/books/${bookSlug}/audio/page_${String(audioNum).padStart(2, "0")}_${language}.mp3`;
+    const audio = new Audio(src);
+
+    setAudioActive(true);
+
+    audio.onended = () => {
+      setAudioActive(false);
+      audioRef.current = null;
+      // Auto-advance to next page
+      if (autoNext && pg < totalPages) {
+        autoAdvanceRef.current = window.setTimeout(() => {
+          goToPage(pg + 1, "next");
+        }, 1500);
+      }
+    };
+    audio.onerror = () => {
+      setAudioActive(false);
+      audioRef.current = null;
+      // Still auto-advance even if audio fails
+      if (autoNext && pg < totalPages) {
+        autoAdvanceRef.current = window.setTimeout(() => {
+          goToPage(pg + 1, "next");
+        }, 1500);
+      }
+    };
+
     audioRef.current = audio;
-    audio.play().catch(() => setAudioPlaying(null));
-    audio.onended = () => setAudioPlaying(null);
-  }, [bookSlug]);
+    audio.play().catch(() => setAudioActive(false));
+  }, [bookSlug, totalPages]);
 
+  // Stop audio
   const stopAudio = useCallback(() => {
-    if (audioRef.current) { audioRef.current.pause(); audioRef.current.currentTime = 0; }
-    setAudioPlaying(null);
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current.currentTime = 0; audioRef.current = null; }
+    setAudioActive(false);
   }, []);
 
-  const advancePageFn = useCallback(() => {
-    autoTimer.current = setTimeout(() => {
-      goToPage(page + 1, "next");
-    }, 1200);
-  }, [page]);
-
-  const autoPlayAudio = useCallback((lang: "en" | "vi", pageNum: number) => {
-    if (autoAudioRef.current) autoAudioRef.current.pause();
-    setAutoAudioPlaying(lang);
-    const audio = new Audio(`/books/${bookSlug}/audio/page_${String(pageNum).padStart(2, "0")}_${lang}.mp3`);
-    autoAudioRef.current = audio;
-    audio.play().catch(() => { setAutoAudioPlaying(null); setAutoReadMode(false); });
-    audio.onended = () => { setAutoAudioPlaying(null); if (advanceRef.current) advanceRef.current(); };
-  }, [bookSlug]);
-
-  advanceRef.current = advancePageFn;
-
-  // Auto-read: play audio on page change
-  useEffect(() => {
-    if (autoReadMode && page > 0 && page <= totalPages) {
-      autoPlayAudio(autoReadLang, page);
-      return () => { if (autoAudioRef.current) autoAudioRef.current.pause(); };
-    }
-  }, [page, autoReadMode, autoReadLang, autoPlayAudio]);
-
-  // Navigate with 3D page flip
+  // Navigate with page flip + auto-play audio
   const goToPage = useCallback((newPage: number, direction: "next" | "prev") => {
     if (newPage < 0 || newPage > totalPages + 1 || flipDir !== null) return;
-    if (autoReadMode) {
-      if (autoTimer.current) clearTimeout(autoTimer.current);
-      if (autoAudioRef.current) autoAudioRef.current.pause();
-    } else stopAudio();
+    stopAudio();
+    if (autoAdvanceRef.current !== null) { clearTimeout(autoAdvanceRef.current); autoAdvanceRef.current = null; }
 
-    // Start flip animation:
-    // 1. Background = new page (revealed underneath)
-    // 2. Curtain = old page (page state value, rotating away)
+    // Start flip
     setFlipNewPage(newPage);
     setFlipDir(direction);
 
-    // After animation completes, update displayed page and clean up
-    const timer = setTimeout(() => {
+    const timer = window.setTimeout(() => {
       setPage(newPage);
+      // Auto-play audio for the new page
+      if (lang) {
+        if (newPage > 0 && newPage <= totalPages) {
+          playAudio(newPage, lang, autoAdvance);
+        }
+      }
       setFlipNewPage(null);
       setFlipDir(null);
-    }, FLIP_DURATION + 50); // small buffer beyond transition
+    }, FLIP_DURATION + 50);
 
-    // Store timer ref for cleanup if needed
-    (window as any).__flipTimer = timer;
-  }, [totalPages, flipDir, autoReadMode, stopAudio]);
+    flipTimerRef.current = timer;
+  }, [totalPages, flipDir, stopAudio, lang, autoAdvance, playAudio]);
 
-  const goNext = useCallback(() => goToPage(page + 1, "next"), [goToPage, page]);
-  const goPrev = useCallback(() => goToPage(page - 1, "prev"), [goToPage, page]);
+  // Tap zones for kid-friendly interaction
+  const handleTap = useCallback((e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    if (flipDir !== null) return;
 
-  const toggleAutoRead = useCallback(() => {
-    if (autoReadMode) {
-      setAutoReadMode(false);
-      if (autoAudioRef.current) { autoAudioRef.current.pause(); setAutoAudioPlaying(null); }
-      if (autoTimer.current) clearTimeout(autoTimer.current);
-    } else {
-      stopAudio();
-      setAutoReadMode(true);
-      if (page === 0) setPage(1);
-      else if (page > 0 && page <= totalPages) autoPlayAudio(autoReadLang, page);
+    const clientX = "touches" in e ? e.changedTouches[0].clientX : e.clientX;
+    const width = window.innerWidth;
+    const tapRatio = clientX / width;
+
+    // Left 20% = go back
+    if (tapRatio < 0.20) {
+      goToPage(page - 1, "prev");
+      return;
     }
-  }, [autoReadMode, page, autoReadLang, stopAudio, totalPages, autoPlayAudio]);
-
-  const switchAutoLang = useCallback((lang: "en" | "vi") => {
-    setAutoReadLang(lang);
+    // Right 20% = go forward
+    if (tapRatio > 0.80) {
+      goToPage(page + 1, "next");
+      return;
+    }
+    // Center: replay audio for current page
     if (page > 0 && page <= totalPages) {
-      if (autoAudioRef.current) autoAudioRef.current.pause();
-      autoPlayAudio(lang, page);
+      playAudio(page, lang, false);
+      return;
     }
-  }, [page, autoPlayAudio]);
+    if (page === 0) {
+      // On cover: start reading from page 1
+      goToPage(1, "next");
+      return;
+    }
+  }, [flipDir, page, totalPages, lang, goToPage, playAudio]);
 
-  // Auto-hide UI
-  useEffect(() => {
-    const reset = () => {
-      setUiVisible(true);
-      if (uiTimer.current) clearTimeout(uiTimer.current);
-      uiTimer.current = setTimeout(() => { if (page > 0) setUiVisible(false); }, 5000);
-    };
-    window.addEventListener("mousemove", reset);
-    window.addEventListener("touchstart", reset);
-    window.addEventListener("keydown", reset);
-    reset();
-    return () => { window.removeEventListener("mousemove", reset); window.removeEventListener("touchstart", reset); window.removeEventListener("keydown", reset); if (uiTimer.current) clearTimeout(uiTimer.current); };
-  }, [page]);
-
-  // Swipe
-  useEffect(() => {
-    let sx = 0;
-    const onStart = (e: TouchEvent) => { if (e.touches.length === 1) sx = e.touches[0].clientX; };
-    const onEnd = (e: TouchEvent) => { const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) dx < 0 ? goNext() : goPrev(); };
-    window.addEventListener("touchstart", onStart, { passive: true });
-    window.addEventListener("touchend", onEnd, { passive: true });
-    return () => { window.removeEventListener("touchstart", onStart); window.removeEventListener("touchend", onEnd); };
-  }, [goNext, goPrev]);
-
-  // Keyboard
+  // Keyboard support
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); goNext(); }
-      if (e.key === "ArrowLeft") { e.preventDefault(); goPrev(); }
-      if (e.key === "a" || e.key === "A") toggleAutoRead();
+      if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); goToPage(page + 1, "next"); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); goToPage(page - 1, "prev"); }
+      if (e.key === "l" || e.key === "L") { setLang(l => l === "en" ? "vi" : "en"); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [goNext, goPrev, toggleAutoRead]);
+  }, [goToPage, page]);
 
-  // Wheel
+  // Auto-hide UI timer
   useEffect(() => {
-    let lastWheel = 0;
-    const onWheel = (e: WheelEvent) => {
-      const now = Date.now();
-      if (now - lastWheel < 1000) return;
-      lastWheel = now;
-      if (Math.abs(e.deltaY) > 30) e.deltaY > 0 ? goNext() : goPrev();
+    const reset = () => {
+      setShowUI(true);
+      if (uiTimer.current) clearTimeout(uiTimer.current);
+      uiTimer.current = setTimeout(() => setShowUI(false), 4000);
     };
-    window.addEventListener("wheel", onWheel, { passive: true });
-    return () => window.removeEventListener("wheel", onWheel);
-  }, [goNext, goPrev]);
+    window.addEventListener("mousemove", reset);
+    window.addEventListener("touchstart", reset);
+    reset();
+    return () => {
+      window.removeEventListener("mousemove", reset);
+      window.removeEventListener("touchstart", reset);
+      clearTimeout(uiTimer.current!);
+    };
+  }, [page]);
 
-  // Cleanup flip timer on unmount
+  // Cleanup
   useEffect(() => {
-    return () => { clearTimeout((window as any).__flipTimer); };
-  }, []);
+    return () => {
+      if (flipTimerRef.current) clearTimeout(flipTimerRef.current);
+      if (autoAdvanceRef.current) clearTimeout(autoAdvanceRef.current);
+      stopAudio();
+    };
+  }, [stopAudio]);
 
-  const currentAudioPlaying = autoReadMode ? autoAudioPlaying : audioPlaying;
-  const onPage = (lang: string, pageNum: number) => {
-    if (lang) playAudio(lang as "en" | "vi", pageNum); else stopAudio();
-  };
+  const pageLabel = (p: number) => p === 0 ? "Bìa" : p > totalPages ? "Hết" : `${p}/${totalPages}`;
 
-  const isFlipping = flipDir !== null;
-
-  // The background page: during flip shows new page, otherwise shows current page
+  // Background page content
   const bgPage = flipNewPage !== null ? flipNewPage : page;
-  // The curtain page: only shown during flip, always the old page
-  const curtainPage = isFlipping ? page : null;
-
-  // Determine curtain transform
-  const curtainOrigin = flipDir === "next" ? "left center" : "right center";
-  const curtainRotate = flipDir === "next" ? -180 : 180;
-
-  // Page number labels
-  const pageLabel = (p: number) => p === 0 ? "Cover" : p > totalPages ? "End" : `${p}/${totalPages}`;
+  const isFlipping = flipDir !== null;
 
   return (
     <div className="relative w-full h-screen bg-[#2a2320] overflow-hidden select-none">
 
-      {/* Background layer: new/current page */}
-      <div className="absolute inset-0">
-        {renderPageContent(bgPage, totalPages, book, bookSlug, currentAudioPlaying, onPage)}
+      {/* Tap zones overlay—kid taps anywhere to interact */}
+      <div
+        className="absolute inset-0 z-40"
+        onClick={handleTap}
+        onTouchEnd={handleTap}
+        style={{ touchAction: "manipulation" }}
+      >
+        {/* Visual hint: left zone */}
+        <div className="absolute inset-y-0 left-0 w-[20%] md:w-[15%] pointer-events-none" />
+        {/* Visual hint: right zone */}
+        <div className="absolute inset-y-0 right-0 w-[20%] md:w-[15%] pointer-events-none" />
       </div>
 
-      {/* Curtain overlay: old page flipping away */}
-      {isFlipping && curtainPage !== null && (
-        <div
-          className="absolute inset-0"
+      {/* Background page */}
+      <div className="absolute inset-0 pointer-events-none">
+        {renderPageContent(bgPage, totalPages, book, bookSlug, audioActive && bgPage === page)}
+      </div>
+
+      {/* Flip curtain */}
+      {isFlipping && page !== null && (
+        <div className="absolute inset-0"
           style={{
-            transformOrigin: curtainOrigin,
-            transform: `perspective(2000px) rotateY(${curtainRotate}deg)`,
+            transformOrigin: flipDir === "next" ? "left center" : "right center",
+            transform: `perspective(2000px) rotateY(${flipDir === "next" ? -180 : 180}deg)`,
             transition: `transform ${FLIP_DURATION}ms cubic-bezier(0.645, 0.045, 0.355, 1.0)`,
             backfaceVisibility: "hidden",
             transformStyle: "preserve-3d",
             zIndex: 10,
+            pointerEvents: "none",
           }}
         >
-          {renderPageContent(curtainPage, totalPages, book, bookSlug, null, () => {})}
-          {/* Spine shadow on the fold edge */}
+          {renderPageContent(page, totalPages, book, bookSlug, false)}
           <div className={`absolute inset-y-0 ${flipDir === "next" ? "left-0" : "right-0"} w-[25%] pointer-events-none`}
             style={{
               background: flipDir === "next"
@@ -390,53 +357,58 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
         </div>
       )}
 
-      {/* Ambient shadow during flip */}
-      {isFlipping && (
-        <div className="absolute inset-0 pointer-events-none z-[9]"
-          style={{
-            background: `radial-gradient(ellipse at ${flipDir === "next" ? "left" : "right"} center, transparent 40%, rgba(0,0,0,0.15) 100%)`,
-            transition: `opacity ${FLIP_DURATION}ms ease`,
-          }} />
+      {/* Top bar */}
+      <div className={`absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-2 transition-opacity duration-500 ${showUI ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+        <Link href="/" className="px-3 py-1.5 bg-black/40 backdrop-blur-sm rounded-full text-white/70 hover:text-white transition-all text-xs" style={{ fontFamily: "'Nunito', sans-serif" }}>← Thư viện</Link>
+        <div className="flex items-center gap-2">
+          {/* Language toggle — big, clear */}
+          <button onClick={() => setLang(l => l === "en" ? "vi" : "en")}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-black/40 backdrop-blur-sm text-amber-300 hover:text-amber-200"
+            style={{ fontFamily: "'Nunito', sans-serif" }}>
+            {lang === "en" ? "🇻🇳 Tiếng Việt" : "🇬🇧 English"}
+          </button>
+          {/* Auto-advance toggle */}
+          <button onClick={() => setAutoAdvance(a => !a)}
+            className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-bold transition-all ${autoAdvance ? "bg-amber-500 text-white" : "bg-black/40 text-white/60"}`}
+            style={{ fontFamily: "'Nunito', sans-serif" }}>
+            ⏭ Tự động
+          </button>
+        </div>
+      </div>
+
+      {/* Tap zone hints — subtle glowing arrows on edges */}
+      <div className={`absolute left-0 top-0 bottom-0 w-[20%] md:w-[15%] z-30 flex items-center justify-start pl-2 md:pl-3 pointer-events-none transition-opacity duration-500 ${showUI ? "opacity-100" : "opacity-0"}`}>
+        {page > 0 && (
+          <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/40 backdrop-blur-sm flex items-center justify-center text-white/70">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </div>
+        )}
+      </div>
+      <div className={`absolute right-0 top-0 bottom-0 w-[20%] md:w-[15%] z-30 flex items-center justify-end pr-2 md:pr-3 pointer-events-none transition-opacity duration-500 ${showUI ? "opacity-100" : "opacity-0"}`}>
+        {page < totalPages + 1 && (
+          <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/40 backdrop-blur-sm flex items-center justify-center text-white/70">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7 4L13 10L7 16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </div>
+        )}
+      </div>
+
+      {/* Center hint for replay */}
+      {showUI && page > 0 && page <= totalPages && (
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none transition-opacity duration-500 flex items-center gap-2 text-white/20">
+          <SpeakerIcon size={16} />
+          <span className="text-xs" style={{ fontFamily: "'Nunito', sans-serif" }}>Chạm để nghe lại</span>
+        </div>
       )}
 
-      {/* Top bar */}
-      <div className={`absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-2 transition-opacity duration-500 ${uiVisible || autoReadMode ? "opacity-100" : "opacity-0"}`}>
-        <Link href="/" className="px-3 py-1.5 bg-black/40 backdrop-blur-sm rounded-full text-white/60 hover:text-white transition-all text-xs" style={{ fontFamily: "'Nunito', sans-serif" }}>← Library</Link>
-        <div className="flex items-center gap-2">
-          <button onClick={toggleAutoRead} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-300 ${autoReadMode ? "bg-amber-500 text-white shadow-md shadow-amber-500/25" : "bg-black/40 backdrop-blur-sm text-white/60 hover:text-white"}`} style={{ fontFamily: "'Nunito', sans-serif" }}>
-            <AutoPlayIcon active={autoReadMode} />
-            <span>{autoReadMode ? "Reading…" : "Auto-Read"}</span>
-          </button>
-          {autoReadMode && (
-            <div className="flex items-center bg-black/40 backdrop-blur-sm rounded-full overflow-hidden">
-              <button onClick={() => switchAutoLang("en")} className={`px-2 py-1 text-[10px] font-bold transition-colors ${autoReadLang === "en" ? "bg-amber-500 text-white" : "text-white/60 hover:text-white"}`}>EN</button>
-              <button onClick={() => switchAutoLang("vi")} className={`px-2 py-1 text-[10px] font-bold transition-colors ${autoReadLang === "vi" ? "bg-amber-500 text-white" : "text-white/60 hover:text-white"}`}>VI</button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Nav arrows */}
-      <button onClick={goPrev}
-        className={`fixed left-3 md:left-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-stone-700 transition-all duration-300 ${page <= 0 || (!uiVisible && !isFlipping) ? "opacity-0 pointer-events-none" : "opacity-100"} hover:bg-white hover:shadow-lg hover:scale-110 active:scale-90 active:bg-amber-100 cursor-pointer`}
-        style={{ touchAction: "manipulation", WebkitTapHighlightColor: "transparent" }}>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-      </button>
-      <button onClick={goNext}
-        className={`fixed right-3 md:right-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-stone-700 transition-all duration-300 ${page >= totalPages + 1 || (!uiVisible && !isFlipping) ? "opacity-0 pointer-events-none" : "opacity-100"} hover:bg-white hover:shadow-lg hover:scale-110 active:scale-90 active:bg-amber-100 cursor-pointer`}
-        style={{ touchAction: "manipulation", WebkitTapHighlightColor: "transparent" }}>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7 4L13 10L7 16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-      </button>
-
       {/* Page indicator */}
-      <div className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ${uiVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
+      <div className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ${showUI ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
         <div className="flex items-center gap-2 px-4 py-1.5 bg-black/40 backdrop-blur-sm rounded-full border border-white/10" style={{ fontFamily: "'Nunito', sans-serif" }}>
           <span className="text-[10px] text-white/60 font-bold">{pageLabel(page)}</span>
-          {autoReadMode && <span className="text-[10px] text-amber-400 ml-1">● Auto</span>}
+          {audioActive && <span className="text-[10px] text-amber-400 ml-1 animate-pulse">🔊 Đang đọc</span>}
+          {autoAdvance && !audioActive && <span className="text-[10px] text-white/40 ml-1">⏭ Tự động</span>}
         </div>
       </div>
 
-      {/* Global styles */}
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&display=swap');
         body { overflow: hidden; position: fixed; width: 100%; }
