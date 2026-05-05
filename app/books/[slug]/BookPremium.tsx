@@ -92,31 +92,23 @@ function CoverPage({ book, slug, audioPlaying, onPlay }: { book: BookData; slug:
 function StoryPage({ bp, slug, audioPlaying, onPlay }: { bp: BookPage; slug: string; audioPlaying: string | null; onPlay: (lang: string, page: number) => void }) {
   return (
     <div className="w-full h-full relative bg-[#1a1510] overflow-hidden">
-      {/* Full-screen image, contained (no stretch, black bars fill sides) */}
       <img src={`/books/${slug}/images/${bp.image}`} alt={`Page ${bp.number}`}
         className="w-full h-full object-contain" />
-
-      {/* Page number badge — top-left corner */}
       <span className="absolute top-3 left-3 inline-flex items-center justify-center w-7 h-7 rounded-full bg-amber-400 text-white text-xs font-black shadow-md"
         style={{ fontFamily: "'Nunito', sans-serif" }}>
         {bp.number}
       </span>
-
-      {/* Text overlay bar — bottom, with gradient backdrop */}
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent pt-10 pb-4 px-4 md:px-8">
         <div className="max-w-3xl mx-auto text-center">
-          {/* Audio buttons */}
           <div className="flex items-center justify-center gap-3 mb-2">
             <AudioButton label="🇬🇧 EN" playing={audioPlaying === "en"} onClick={() => audioPlaying === "en" ? onPlay("", bp.number) : onPlay("en", bp.number)} />
             <AudioButton label="🇻🇳 VI" playing={audioPlaying === "vi"} onClick={() => audioPlaying === "vi" ? onPlay("", bp.number) : onPlay("vi", bp.number)} />
           </div>
-          {/* English text — large, white, bold with text-shadow for readability */}
           <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-white text-center leading-snug mb-1"
             style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, textShadow: "0 2px 8px rgba(0,0,0,0.5)" }}>
             {bp.title_en}
           </p>
-          {/* Vietnamese text — slightly smaller, warm amber */}
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-amber-200/90 text-center leading-snug"
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-amber-200/90 text-center leading-snug pb-10"
             style={{ fontFamily: "'Nunito', sans-serif", textShadow: "0 2px 8px rgba(0,0,0,0.5)" }}>
             {bp.title_vi}
           </p>
@@ -158,23 +150,48 @@ function EndPage({ book, audioPlaying, onPlay, totalPages }: { book: BookData; a
 }
 
 // ═══════════════════════════════════════
-// Book page flip reader — CSS 3D transforms
+// Render content for a given page number
+// ═══════════════════════════════════════
+function renderPageContent(
+  pageNum: number,
+  totalPages: number,
+  book: BookData,
+  bookSlug: string,
+  audioPlaying: string | null,
+  onPlay: (lang: string, page: number) => void
+) {
+  if (pageNum === 0) return <CoverPage book={book} slug={bookSlug} audioPlaying={audioPlaying} onPlay={onPlay} />;
+  if (pageNum > totalPages) return <EndPage book={book} audioPlaying={audioPlaying} onPlay={onPlay} totalPages={totalPages} />;
+  return <StoryPage bp={book.pages[pageNum - 1]} slug={bookSlug} audioPlaying={audioPlaying} onPlay={onPlay} />;
+}
+
+// Flip animation duration in ms
+const FLIP_DURATION = 950;
+
+// ═══════════════════════════════════════
+// Main reader with proper 3D book page flip
 // ═══════════════════════════════════════
 export default function BookPremium({ book, bookSlug }: { book: BookData; bookSlug: string }) {
   const totalPages = book.pages.length;
+
+  // Displayed page number (only updates AFTER animation completes)
   const [page, setPage] = useState(0);
+
+  // Animation state — null means idle
   const [flipDir, setFlipDir] = useState<"next" | "prev" | null>(null);
-  const [flipProgress, setFlipProgress] = useState(0); // 0-1
+  // Page being revealed (background, shown underneath the curtain)
+  const [flipNewPage, setFlipNewPage] = useState<number | null>(null);
+
+  // UI state
   const [uiVisible, setUiVisible] = useState(true);
+
+  // Auto-read
   const [autoReadMode, setAutoReadMode] = useState(false);
   const [autoReadLang, setAutoReadLang] = useState<"en" | "vi">("vi");
-  const uiTimer = useRef<NodeJS.Timeout | null>(null);
   const autoTimer = useRef<NodeJS.Timeout | null>(null);
-  const flipRaf = useRef<number | null>(null);
-  const flipStartRef = useRef<number>(0);
-  const FLIP_DURATION = 600; // ms
 
   // Audio
+  const uiTimer = useRef<NodeJS.Timeout | null>(null);
   const [audioPlaying, setAudioPlaying] = useState<"en" | "vi" | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const autoAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -212,7 +229,7 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
 
   advanceRef.current = advancePageFn;
 
-  // Auto-read
+  // Auto-read: play audio on page change
   useEffect(() => {
     if (autoReadMode && page > 0 && page <= totalPages) {
       autoPlayAudio(autoReadLang, page);
@@ -220,7 +237,7 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
     }
   }, [page, autoReadMode, autoReadLang, autoPlayAudio]);
 
-  // Page flip animation via requestAnimationFrame
+  // Navigate with 3D page flip
   const goToPage = useCallback((newPage: number, direction: "next" | "prev") => {
     if (newPage < 0 || newPage > totalPages + 1 || flipDir !== null) return;
     if (autoReadMode) {
@@ -228,35 +245,22 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
       if (autoAudioRef.current) autoAudioRef.current.pause();
     } else stopAudio();
 
+    // Start flip animation:
+    // 1. Background = new page (revealed underneath)
+    // 2. Curtain = old page (page state value, rotating away)
+    setFlipNewPage(newPage);
     setFlipDir(direction);
-    flipStartRef.current = performance.now();
 
-    const animate = (now: number) => {
-      const elapsed = now - flipStartRef.current;
-      const progress = Math.min(elapsed / FLIP_DURATION, 1);
-      setFlipProgress(progress);
+    // After animation completes, update displayed page and clean up
+    const timer = setTimeout(() => {
+      setPage(newPage);
+      setFlipNewPage(null);
+      setFlipDir(null);
+    }, FLIP_DURATION + 50); // small buffer beyond transition
 
-      // At the halfway point, swap to the new page content
-      if (progress >= 0.5) {
-        setPage(newPage);
-      }
-
-      if (progress < 1) {
-        flipRaf.current = requestAnimationFrame(animate);
-      } else {
-        setFlipProgress(0);
-        setFlipDir(null);
-        flipRaf.current = null;
-      }
-    };
-
-    flipRaf.current = requestAnimationFrame(animate);
+    // Store timer ref for cleanup if needed
+    (window as any).__flipTimer = timer;
   }, [totalPages, flipDir, autoReadMode, stopAudio]);
-
-  // Cleanup
-  useEffect(() => {
-    return () => { if (flipRaf.current) cancelAnimationFrame(flipRaf.current); };
-  }, []);
 
   const goNext = useCallback(() => goToPage(page + 1, "next"), [goToPage, page]);
   const goPrev = useCallback(() => goToPage(page - 1, "prev"), [goToPage, page]);
@@ -269,7 +273,7 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
     } else {
       stopAudio();
       setAutoReadMode(true);
-      if (page === 0) { setPage(1); }
+      if (page === 0) setPage(1);
       else if (page > 0 && page <= totalPages) autoPlayAudio(autoReadLang, page);
     }
   }, [autoReadMode, page, autoReadLang, stopAudio, totalPages, autoPlayAudio]);
@@ -280,7 +284,7 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
       if (autoAudioRef.current) autoAudioRef.current.pause();
       autoPlayAudio(lang, page);
     }
-  }, [page, totalPages, autoPlayAudio]);
+  }, [page, autoPlayAudio]);
 
   // Auto-hide UI
   useEffect(() => {
@@ -330,151 +334,68 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
     return () => window.removeEventListener("wheel", onWheel);
   }, [goNext, goPrev]);
 
+  // Cleanup flip timer on unmount
+  useEffect(() => {
+    return () => { clearTimeout((window as any).__flipTimer); };
+  }, []);
+
   const currentAudioPlaying = autoReadMode ? autoAudioPlaying : audioPlaying;
-
-  const renderContent = () => {
-    if (page === 0) return <CoverPage book={book} slug={bookSlug} audioPlaying={currentAudioPlaying} onPlay={(lang, p) => { if (lang) playAudio(lang as "en" | "vi", p); else stopAudio(); }} />;
-    if (page > totalPages) return <EndPage book={book} audioPlaying={currentAudioPlaying} onPlay={(lang, p) => { if (lang) playAudio(lang as "en" | "vi", p); else stopAudio(); }} totalPages={totalPages} />;
-    return <StoryPage bp={book.pages[page - 1]} slug={bookSlug} audioPlaying={currentAudioPlaying} onPlay={(lang, p) => { if (lang) playAudio(lang as "en" | "vi", p); else stopAudio(); }} />;
+  const onPage = (lang: string, pageNum: number) => {
+    if (lang) playAudio(lang as "en" | "vi", pageNum); else stopAudio();
   };
 
-  // Calculate 3D flip transforms
   const isFlipping = flipDir !== null;
-  const flipP = flipProgress; // 0-1
 
-  // When flipping: we render TWO page layers
-  // - Back layer: the page being flipped away (current content at page)
-  //   - But page has already been swapped at progress=0.5, so we need to render the OLD page
-  // - Front layer: the page being flipped in
-  // Solution: use CSS perspective + rotateY on the flipping layer
+  // The background page: during flip shows new page, otherwise shows current page
+  const bgPage = flipNewPage !== null ? flipNewPage : page;
+  // The curtain page: only shown during flip, always the old page
+  const curtainPage = isFlipping ? page : null;
 
-  // For forward (next): right page flips leftward, revealing page on left
-  // For backward (prev): left page flips rightward
+  // Determine curtain transform
+  const curtainOrigin = flipDir === "next" ? "left center" : "right center";
+  const curtainRotate = flipDir === "next" ? -180 : 180;
 
-  // Since we swap page content at progress=0.5, we can't easily get the "old" page.
-  // Better approach: pre-render both + flip.
-  // Simplest correct approach: render content behind + flip curtain in front.
-
-  // The flip curtain approach:
-  // - Render current page as background
-  // - Render "curtain" div that is the next page, rotating like a page flip
-  // - Curtain starts at rotateY(0) and goes to rotateY(-180deg)
-  // - Perspective applied to container
-
-  // For the "old page" (behind the curtain), we need to know what it was.
-  // Since we already call setPage at progress >= 0.5, the content underneath 
-  // is the new page. The curtain is the old page flipping away.
-
-  // Actually, let me rethink. The classic page flip:
-  // You're viewing page N. When flipping forward:
-  // - A layer showing page N+1 rotates open from right to left
-  // - This reveals page N+1 underneath
-  // 
-  // In our case with the setTimeout setPage trick:
-  // - Background starts as page N, updates to N+1 at halfway
-  // - The curtain (rotating layer) starts as page N+1, needs to be page N at halfway
-  //
-  // This is getting overly complex. Let me use a simpler but still beautiful approach:
-  // CSS perspective page curtain flip.
-
-  // Page flip via curtain technique:
-  // The curtain layer is the PAGE BEING FLIPPED OVER.
-  // It starts covering the screen (rotateY 0deg, facing you).
-  // It rotates to -180deg (for forward flip) showing its BACK — which is the new page.
-  
-  // We need TWO renders:
-  // 1. The page underneath (what you see after flip completes)
-  // 2. The curtain (what you see during the flip, rotating away)
-  
-  // For forward flip: curtain = OLD page (page N), underneath = NEW page (page N+1)
-  // For backward flip: curtain = OLD page (page N), underneath = NEW page (page N-1)
-
-  // Since setPage fires at progress >= 0.5:
-  // - progress 0-0.49: content = PAGE N (correct, this is what's behind curtain)
-  // - progress 0.5+: content = PAGE N+1 (correct, this is what's revealed)
-  // 
-  // Curtain: always shows the OLD page. But we can't easily render it with setPage.
-  // 
-  // Workaround: render the curtain content based on the DIRECTION and PREVIOUS page.
-  // Track prevPage separately.
-  
-  const curtainPage = flipDir === "next" ? page - 1 : page + 1;
-  
-  const renderCurtainPage = () => {
-    // The page that's on the curtain (being flipped away)
-    if (curtainPage < 0 || curtainPage > totalPages + 1) return null;
-    if (curtainPage === 0) return <CoverPage book={book} slug={bookSlug} audioPlaying={null} onPlay={() => {}} />;
-    if (curtainPage > totalPages) return <EndPage book={book} audioPlaying={null} onPlay={() => {}} totalPages={totalPages} />;
-    return <StoryPage bp={book.pages[curtainPage - 1]} slug={bookSlug} audioPlaying={null} onPlay={() => {}} />;
-  };
-
-  // Easing: ease-in-out
-  const easeInOutCubic = (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  const eased = easeInOutCubic(flipP);
-
-  // Curtain rotation:
-  // Next: 0 deg → -180 deg (flips from right to left)
-  // Prev: 0 deg → +180 deg (flips from left to right)
-  const rotation = flipDir === "next" ? -eased * 180 : eased * 180;
-  
-  // Shadow intensity for depth during flip
-  const shadowIntensity = Math.sin(eased * Math.PI) * 0.3;
+  // Page number labels
+  const pageLabel = (p: number) => p === 0 ? "Cover" : p > totalPages ? "End" : `${p}/${totalPages}`;
 
   return (
-    <div className="relative w-full h-screen bg-[#2a2320] overflow-hidden select-none"
-      style={{ perspective: "2000px" }}>
-      
-      {/* Underlying page (what you see after flip or before flip starts) */}
-      <div className="w-full h-full"
-        style={{
-          backfaceVisibility: "hidden",
-        }}
-      >
-        {renderContent()}
+    <div className="relative w-full h-screen bg-[#2a2320] overflow-hidden select-none">
+
+      {/* Background layer: new/current page */}
+      <div className="absolute inset-0">
+        {renderPageContent(bgPage, totalPages, book, bookSlug, currentAudioPlaying, onPage)}
       </div>
 
-      {/* Flip curtain overlay — only visible during flip */}
-      {isFlipping && (
+      {/* Curtain overlay: old page flipping away */}
+      {isFlipping && curtainPage !== null && (
         <div
-          className="absolute inset-0 origin-left"
+          className="absolute inset-0"
           style={{
-            transformOrigin: flipDir === "next" ? "left center" : "right center",
-            transform: `rotateY(${rotation}deg)`,
+            transformOrigin: curtainOrigin,
+            transform: `perspective(2000px) rotateY(${curtainRotate}deg)`,
+            transition: `transform ${FLIP_DURATION}ms cubic-bezier(0.645, 0.045, 0.355, 1.0)`,
+            backfaceVisibility: "hidden",
             transformStyle: "preserve-3d",
-            width: "100%",
-            height: "100%",
-            pointerEvents: "none",
             zIndex: 10,
           }}
         >
-          {/* Front of curtain — the page being flipped away (old page) */}
-          <div className="absolute inset-0" style={{ backfaceVisibility: "hidden" }}>
-            {renderCurtainPage()}
-          </div>
-          {/* Back of curtain — shows when page has rotated past 90deg */}
-          <div className="absolute inset-0"
-            style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
-          >
-            {/* Mirror of the new page — but we just show a paper-colored background 
-                or the flipped-page shadow effect */}
-            <div className="w-full h-full flex items-center justify-center"
-              style={{ background: "linear-gradient(to right, #e8e4df, #faf8f4)" }}>
-              {/* Subtle spine shadow */}
-              <div className="absolute inset-y-0 left-0 w-[20%]"
-                style={{
-                  background: "linear-gradient(to right, rgba(0,0,0,0.15), transparent)",
-                }} />
-            </div>
-          </div>
+          {renderPageContent(curtainPage, totalPages, book, bookSlug, null, () => {})}
+          {/* Spine shadow on the fold edge */}
+          <div className={`absolute inset-y-0 ${flipDir === "next" ? "left-0" : "right-0"} w-[25%] pointer-events-none`}
+            style={{
+              background: flipDir === "next"
+                ? "linear-gradient(to right, rgba(0,0,0,0.12), transparent)"
+                : "linear-gradient(to left, rgba(0,0,0,0.12), transparent)",
+            }} />
         </div>
       )}
 
-      {/* Depth shadow during flip */}
+      {/* Ambient shadow during flip */}
       {isFlipping && (
         <div className="absolute inset-0 pointer-events-none z-[9]"
           style={{
-            background: `radial-gradient(ellipse at ${flipDir === "next" ? "left" : "right"} center, transparent 60%, rgba(0,0,0,${shadowIntensity * 0.5}) 100%)`,
-            transition: "none",
+            background: `radial-gradient(ellipse at ${flipDir === "next" ? "left" : "right"} center, transparent 40%, rgba(0,0,0,0.15) 100%)`,
+            transition: `opacity ${FLIP_DURATION}ms ease`,
           }} />
       )}
 
@@ -510,7 +431,7 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
       {/* Page indicator */}
       <div className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ${uiVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
         <div className="flex items-center gap-2 px-4 py-1.5 bg-black/40 backdrop-blur-sm rounded-full border border-white/10" style={{ fontFamily: "'Nunito', sans-serif" }}>
-          <span className="text-[10px] text-white/60 font-bold">{page === 0 ? "Cover" : page > totalPages ? "End" : `${page}/${totalPages}`}</span>
+          <span className="text-[10px] text-white/60 font-bold">{pageLabel(page)}</span>
           {autoReadMode && <span className="text-[10px] text-amber-400 ml-1">● Auto</span>}
         </div>
       </div>
