@@ -444,11 +444,13 @@ export default function BookPremium({ book, bookSlug }: { book: BookData; bookSl
 
   return (
     <div className="relative w-full h-screen bg-[#2a2320] overflow-hidden select-none">
-      {/* Tap zones overlay */}
+      {/* Tap zones overlay — only active when reading (not on cover) */}
       <div
-        className="absolute inset-0 z-40"
-        onClick={handleTap}
-        onTouchEnd={handleTap}
+        className={`absolute inset-0 z-40 transition-opacity duration-300 ${
+          page > 0 ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={page > 0 ? handleTap : undefined}
+        onTouchEnd={page > 0 ? handleTap : undefined}
         style={{ touchAction: "manipulation" }}
       >
         <div className="absolute inset-y-0 left-0 w-[25%] pointer-events-none" />
