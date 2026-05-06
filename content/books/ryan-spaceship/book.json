@@ -1,0 +1,129 @@
+{
+  "slug": "ryan-spaceship",
+  "title_en": "Ryan's Spaceship Adventure",
+  "title_vi": "Cuộc Phiêu Lưu Tàu Vũ Trụ Của Ryan",
+  "author": "Hung Manh Do",
+  "age_range": "3-7 years",
+  "description_en": "A brave boy named Ryan builds a spaceship and explores the stars, visiting colorful planets and making friends with aliens.",
+  "description_vi": "Một cậu bé dũng cảm tên Ryan chế tạo tàu vũ trụ và khám phá các vì sao, ghé thăm những hành tinh đầy màu sắc và kết bạn với người ngoài hành tinh.",
+  "theme": "space, adventure, courage, friendship, imagination",
+  "cover_image": "images/page_01.jpg",
+  "format": "landscape",
+  "page_count": 16,
+  "status": "draft",
+  "featured": false,
+  "pages": [
+    {
+      "number": 1,
+      "title_en": "Ryan looked up at the stars every night. He dreamed of flying among them.",
+      "title_vi": "Ryan ngước nhìn những ngôi sao mỗi đêm. Cậu mơ ước được bay giữa chúng.",
+      "image": "page_01.jpg",
+      "prompt": "A cute Vietnamese boy named Ryan looking up at a starry night sky from his bedroom window, Pixar-style 3D animation, child-friendly and appealing, warm golden lighting, cozy bedroom with rocket posters on walls, beautiful starry sky visible through window, vivid warm tones, high quality masterpiece"
+    },
+    {
+      "number": 2,
+      "title_en": "One day he found a big cardboard box. \"I will build a spaceship!\" he said.",
+      "title_vi": "Một ngày cậu tìm thấy một chiếc hộp carton lớn. \"Mình sẽ làm một tàu vũ trụ!\" cậu nói.",
+      "image": "page_02.jpg",
+      "prompt": "A cute Vietnamese boy building a spaceship out of a cardboard box in a sunny backyard, Pixar-style 3D animation, child-friendly and appealing, soft natural lighting, colorful markers and aluminum foil, scattered tools, bright garden background, vivid warm tones, high quality masterpiece"
+    },
+    {
+      "number": 3,
+      "title_en": "He painted it silver and added a red nose cone. It looked amazing!",
+      "title_vi": "Cậu sơn nó màu bạc và thêm mũi tàu màu đỏ. Trông thật tuyệt!",
+      "image": "page_03.jpg",
+      "prompt": "A cute Vietnamese boy painting a cardboard spaceship silver with red nose cone, Pixar-style 3D animation, child-friendly and appealing, bright colorful paints, happy expression, sunny backyard setting, vivid warm tones, high quality masterpiece"
+    },
+    {
+      "number": 4,
+      "title_en": "\"Three... two... one... BLAST OFF!\" The spaceship shook and lifted into the sky.",
+      "title_vi": "\"Ba... hai... một... CẤT CÁNH!\" Tàu vũ trụ rung chuyển và bay lên trời.",
+      "image": "page_04.jpg",
+      "prompt": "A cardboard spaceship blasting off from a colorful garden with bright flames and smoke, Pixar-style 3D animation, child-friendly and appealing, dramatic sky lighting, excited boy visible through window, blue sky and clouds, vivid warm tones, high quality masterpiece"
+    },
+    {
+      "number": 5,
+      "title_en": "Ryan flew past the Moon. It was big and round and full of craters.",
+      "title_vi": "Ryan bay qua Mặt Trăng. Nó to tròn và đầy miệng hố.",
+      "image": "page_05.jpg",
+      "prompt": "A cute cardboard spaceship flying near the giant Moon in space, Pixar-style 3D animation, child-friendly and appealing, the Moon visible through the spaceship window with craters, starry space background, beautiful cosmic lighting, vivid warm tones, high quality masterpiece"
+    },
+    {
+      "number": 6,
+      "title_en": "Then he saw Mars — a red planet with tall mountains and deep valleys.",
+      "title_vi": "Rồi cậu nhìn thấy Sao Hỏa — hành tinh đỏ với núi cao và vực sâu.",
+      "image": "page_06.jpg",
+      "prompt": "A cute cardboard spaceship approaching the red planet Mars in space, Pixar-style 3D animation, child-friendly and appealing, Mars with tall mountains and deep valleys, orange-red tones, starry space background, vivid tones, high quality masterpiece"
+    },
+    {
+      "number": 7,
+      "title_en": "Ryan landed on Mars and wore his special space boots.",
+      "title_vi": "Ryan đáp xuống Sao Hỏa và mang đôi giày không gian đặc biệt.",
+      "image": "page_07.jpg",
+      "prompt": "A cute Vietnamese boy in a colorful spacesuit standing on the surface of Mars, Pixar-style 3D animation, child-friendly and appealing, red rocky terrain, his spaceship parked behind, tall mountains in background, dramatic lighting, vivid warm tones, high quality masterpiece"
+    },
+    {
+      "number": 8,
+      "title_en": "He left a flag on Mars. It had a big star that said \"Ryan was here!\"",
+      "title_vi": "Cậu cắm một lá cờ trên Sao Hỏa. Nó có ngôi sao lớn ghi \"Ryan đã đến đây!\"",
+      "image": "page_08.jpg",
+      "prompt": "A cute Vietnamese boy planting a colorful flag with a star on the red surface of Mars, Pixar-style 3D animation, child-friendly and appealing, proud happy expression, spaceship in background, red rocky ground, dramatic space lighting, vivid warm tones, high quality masterpiece"
+    },
+    {
+      "number": 9,
+      "title_en": "Next he flew to Saturn. It had beautiful golden rings.",
+      "title_vi": "Tiếp theo cậu bay đến Sao Thổ. Nó có những chiếc vành đai vàng tuyệt đẹp.",
+      "image": "page_09.jpg",
+      "prompt": "A cute cardboard spaceship flying near Saturn with its beautiful golden rings in space, Pixar-style 3D animation, child-friendly and appealing, glowing golden rings, starry space background, cosmic lighting, vivid warm tones, high quality masterpiece"
+    },
+    {
+      "number": 10,
+      "title_en": "He flew through the rings! They sparkled like millions of diamonds.",
+      "title_vi": "Cậu bay xuyên qua vành đai! Chúng lấp lánh như triệu viên kim cương.",
+      "image": "page_10.jpg",
+      "prompt": "A cute cardboard spaceship flying through Saturn's sparkling golden rings in space, Pixar-style 3D animation, child-friendly and appealing, the rings glowing like millions of diamonds, magical cosmic lighting, starry background, vivid warm tones, high quality masterpiece"
+    },
+    {
+      "number": 11,
+      "title_en": "Far away, Ryan met a friendly green alien with big curious eyes.",
+      "title_vi": "Ở xa xa, Ryan gặp một người ngoài hành tinh xanh thân thiện với đôi mắt tò mò lớn.",
+      "image": "page_11.jpg",
+      "prompt": "A cute Vietnamese boy meeting a friendly small green alien with big curious eyes on a colorful alien planet, Pixar-style 3D animation, child-friendly and appealing, both characters reaching out to shake hands, purple and blue alien sky, glowing plants, vivid warm tones, high quality masterpiece"
+    },
+    {
+      "number": 12,
+      "title_en": "The alien gave Ryan a rainbow crystal as a gift. They became best friends.",
+      "title_vi": "Người ngoài hành tinh tặng Ryan một viên cầu vồng làm quà. Họ trở thành bạn thân.",
+      "image": "page_12.jpg",
+      "prompt": "A cute green alien giving a glowing rainbow crystal to a happy Vietnamese boy on an alien planet, Pixar-style 3D animation, child-friendly and appealing, warm friendship moment, colorful alien landscape, magical crystal glow, vivid warm tones, high quality masterpiece"
+    },
+    {
+      "number": 13,
+      "title_en": "Ryan flew to many more planets. Each one was more magical than the last.",
+      "title_vi": "Ryan bay đến nhiều hành tinh nữa. Mỗi nơi đều kỳ ảo hơn nơi trước.",
+      "image": "page_13.jpg",
+      "prompt": "A cute cardboard spaceship flying through a magical galaxy with multiple colorful planets, Pixar-style 3D animation, child-friendly and appealing, swirling nebula, rainbow cosmic dust, starry space background, vivid warm tones, high quality masterpiece"
+    },
+    {
+      "number": 14,
+      "title_en": "He saw a rainbow nebula, a purple galaxy, and a blue star nursery.",
+      "title_vi": "Cậu nhìn thấy tinh vân cầu vồng, thiên hà tím, và vườn sao xanh.",
+      "image": "page_14.jpg",
+      "prompt": "A beautiful cosmic scene of a rainbow nebula, purple galaxy, and glowing blue star nursery from a spaceship window, Pixar-style 3D animation, child-friendly silhouette visible at window, magnificent cosmic lighting, vivid tones, high quality masterpiece"
+    },
+    {
+      "number": 15,
+      "title_en": "Ryan flew back home. His spaceship landed softly in the garden.",
+      "title_vi": "Ryan bay về nhà. Tàu vũ trụ của cậu hạ cánh nhẹ nhàng trong vườn.",
+      "image": "page_15.jpg",
+      "prompt": "A cardboard spaceship landing softly in a beautiful garden at sunset, Pixar-style 3D animation, child-friendly and appealing, warm golden hour lighting, colorful flowers, cozy neighborhood background, vivid warm tones, high quality masterpiece"
+    },
+    {
+      "number": 16,
+      "title_en": "The biggest adventures begin with a dream and a cardboard box. Sweet dreams, Ryan.",
+      "title_vi": "Những cuộc phiêu lưu lớn nhất bắt đầu từ một giấc mơ và chiếc hộp carton. Chúc ngủ ngon, Ryan.",
+      "image": "page_16.jpg",
+      "prompt": "A cute Vietnamese boy sleeping peacefully in his bed with a handmade cardboard spaceship nearby, starlight streaming through window, Pixar-style 3D animation, child-friendly and appealing, soft warm night lighting, cozy bedroom, magical stars visible through window, vivid warm tones, high quality masterpiece"
+    }
+  ]
+}
