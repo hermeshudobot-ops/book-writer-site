@@ -3,7 +3,7 @@
     {
       "slug": "little-caterpillar",
       "title_en": "The Little Caterpillar",
-      "title_vi": "Ch\u00fa S\u00e2u B\u01b0\u1edbm Nh\u1ecf",
+      "title_vi": "Chú Sâu Bướm Nhỏ",
       "author": "Hung Manh Do",
       "age_range": "2-6 years",
       "cover_image": "images/page_01.jpg",
@@ -14,7 +14,7 @@
     {
       "slug": "tico-brave-day",
       "title_en": "Tico's Brave Day",
-      "title_vi": "Ng\u00e0y D\u0169ng C\u1ea3m C\u1ee7a Tico",
+      "title_vi": "Ngày Dũng Cảm Của Tico",
       "author": "Hung Manh Do",
       "age_range": "2-6 years",
       "cover_image": "images/page_01.jpg",
@@ -28,6 +28,17 @@
       "title_vi": "Một Ngày Đầy Màu Sắc Của Mimi",
       "author": "Hung Manh Do",
       "age_range": "2-6 years",
+      "cover_image": "images/page_01.jpg",
+      "page_count": 16,
+      "featured": false,
+      "status": "published"
+    },
+    {
+      "slug": "dino-shares-treasure",
+      "title_en": "Dino Shares His Treasure",
+      "title_vi": "Khủng Long Chia Kho Báu",
+      "author": "Hung Manh Do",
+      "age_range": "2-5 years",
       "cover_image": "images/page_01.jpg",
       "page_count": 16,
       "featured": false,

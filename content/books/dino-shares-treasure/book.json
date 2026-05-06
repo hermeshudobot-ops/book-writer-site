@@ -1,0 +1,130 @@
+{
+  "slug": "dino-shares-treasure",
+  "title_en": "Dino Shares His Treasure",
+  "title_vi": "Khủng Long Chia Kho Báu",
+  "author": "Hung Manh Do",
+  "age_range": "2-5 years",
+  "description_en": "A little green dinosaur finds shiny treasures but learns that sharing makes everything more fun.",
+  "description_vi": "Chú khủng long xanh nhỏ tìm thấy những kho báu lấp lánh nhưng học được rằng chia sẻ làm mọi thứ vui hơn.",
+  "theme": "sharing, friendship, dinosaurs",
+  "cover_image": "images/page_01.jpg",
+  "format": "landscape",
+  "page_count": 16,
+  "end_emoji": "🦕",
+  "status": "draft",
+  "featured": false,
+  "pages": [
+    {
+      "number": 1,
+      "title_en": "This is Dino. Dino is a little green dinosaur with a happy smile.",
+      "title_vi": "Đây là Dino. Dino là chú khủng long xanh nhỏ xinh với nụ cười thật tươi.",
+      "image": "page_01.jpg",
+      "prompt": "A cute little green dinosaur with big friendly eyes standing in a sunny meadow, Pixar 3D animation style, child-friendly, soft warm lighting, lush green grass, shallow depth of field, beautiful nature background"
+    },
+    {
+      "number": 2,
+      "title_en": "One morning, Dino found a shiny blue rock by the stream.",
+      "title_vi": "Một buổi sáng, Dino tìm thấy một viên đá xanh lấp lánh bên suối.",
+      "image": "page_02.jpg",
+      "prompt": "A cute little green dinosaur with big friendly eyes looking at a shiny blue rock near a sparkling stream, Pixar 3D animation style, child-friendly, soft warm lighting, shallow depth of field, nature background"
+    },
+    {
+      "number": 3,
+      "title_en": "Then Dino found a pretty yellow shell on the beach.",
+      "title_vi": "Rồi Dino tìm thấy một chiếc vỏ sò vàng xinh đẹp trên bãi biển.",
+      "image": "page_03.jpg",
+      "prompt": "A cute little green dinosaur with big friendly eyes holding a pretty yellow seashell on a sunny beach, Pixar 3D animation style, child-friendly, soft warm lighting, shallow depth of field, ocean in background"
+    },
+    {
+      "number": 4,
+      "title_en": "Dino found a red flower in the garden. So pretty!",
+      "title_vi": "Dino tìm thấy một bông hoa đỏ trong khu vườn. Đẹp quá!",
+      "image": "page_04.jpg",
+      "prompt": "A cute little green dinosaur with big friendly eyes looking at a bright red flower in a colorful garden, Pixar 3D animation style, child-friendly, soft warm lighting, shallow depth of field, green grass background"
+    },
+    {
+      "number": 5,
+      "title_en": "Dino put all his treasures in a big basket. 'All mine!' he said.",
+      "title_vi": "Dino bỏ tất cả kho báu vào một chiếc giỏ lớn. 'Của mình hết!' chú nói.",
+      "image": "page_05.jpg",
+      "prompt": "A cute little green dinosaur with big friendly eyes holding a big woven basket full of colorful treasures including a blue rock, yellow shell, and red flower, Pixar 3D animation style, child-friendly, soft warm lighting, shallow depth of field"
+    },
+    {
+      "number": 6,
+      "title_en": "Dino carried his basket all alone. It was very heavy.",
+      "title_vi": "Dino xách giỏ một mình. Giỏ rất nặng.",
+      "image": "page_06.jpg",
+      "prompt": "A cute little green dinosaur with big friendly eyes struggling to carry a heavy basket full of treasures, arms straining, Pixar 3D animation style, child-friendly, soft warm lighting, shallow depth of field, forest path background"
+    },
+    {
+      "number": 7,
+      "title_en": "Dino tripped. Oh no! His treasures rolled everywhere!",
+      "title_vi": "Dino bị vấp. Ôi không! Kho báu lăn đi khắp nơi!",
+      "image": "page_07.jpg",
+      "prompt": "A cute little green dinosaur with big friendly eyes falling down, colorful treasures — blue rock, yellow shell, red flower — rolling and scattering in all directions, Pixar 3D animation style, child-friendly, soft warm lighting, dynamic action pose"
+    },
+    {
+      "number": 8,
+      "title_en": "Dino sat down. He felt sad and all alone.",
+      "title_vi": "Dino ngồi xuống. Chú cảm thấy buồn và cô đơn.",
+      "image": "page_08.jpg",
+      "prompt": "A cute little green dinosaur with big friendly eyes sitting on the ground looking sad, scattered colorful treasures around, Pixar 3D animation style, child-friendly, soft warm lighting, shallow depth of field, meadow background"
+    },
+    {
+      "number": 9,
+      "title_en": "Then Bella Bunny hopped over. 'Can I help you, Dino?'",
+      "title_vi": "Rồi bạn Thỏ Bella nhảy tới. 'Mình giúp bạn nhé, Dino?'",
+      "image": "page_09.jpg",
+      "prompt": "A cute little green dinosaur with big friendly eyes looking up at a cute fluffy white bunny with long ears who is hopping toward the scattered treasures, Pixar 3D animation style, child-friendly, soft warm lighting, shallow depth of field, meadow background"
+    },
+    {
+      "number": 10,
+      "title_en": "Bella picked up the blue rock. 'This one is beautiful!' she said.",
+      "title_vi": "Bella nhặt viên đá xanh. 'Viên này đẹp quá!' bạn ấy nói.",
+      "image": "page_10.jpg",
+      "prompt": "A cute fluffy white bunny with long ears holding up a shiny blue rock showing it to a cute little green dinosaur with big friendly eyes, both looking at the rock, Pixar 3D animation style, child-friendly, soft warm lighting, shallow depth of field"
+    },
+    {
+      "number": 11,
+      "title_en": "Dino smiled. 'You can keep it, Bella!'",
+      "title_vi": "Dino cười. 'Bạn giữ lại nhé, Bella!'",
+      "image": "page_11.jpg",
+      "prompt": "A cute little green dinosaur with big friendly eyes smiling and offering the shiny blue rock to a cute fluffy white bunny with long ears, both happy, Pixar 3D animation style, child-friendly, soft warm lighting, shallow depth of field"
+    },
+    {
+      "number": 12,
+      "title_en": "Bella gave Dino the yellow shell. Friends share gifts!",
+      "title_vi": "Bella tặng Dino chiếc vỏ sò vàng. Bạn bè chia sẻ quà tặng!",
+      "image": "page_12.jpg",
+      "prompt": "A cute fluffy white bunny with long ears handing a pretty yellow seashell to a cute little green dinosaur with big friendly eyes, both smiling and happy, Pixar 3D animation style, child-friendly, soft warm lighting, shallow depth of field"
+    },
+    {
+      "number": 13,
+      "title_en": "More friends came. Everyone found something fun!",
+      "title_vi": "Thêm nhiều bạn đến. Mọi người đều tìm thấy thứ vui!",
+      "image": "page_13.jpg",
+      "prompt": "A cute little green dinosaur with big friendly eyes surrounded by several cute animal friends — a bunny, a squirrel, and a duck — all happily looking at colorful scattered treasures in a sunny meadow, Pixar 3D animation style, child-friendly, soft warm lighting"
+    },
+    {
+      "number": 14,
+      "title_en": "Dino gave the red flower to his friend Squirrel.",
+      "title_vi": "Dino tặng bông hoa đỏ cho bạn Sóc.",
+      "image": "page_14.jpg",
+      "prompt": "A cute little green dinosaur with big friendly eyes handing a bright red flower to a cute little brown squirrel with a fluffy tail, both happy, Pixar 3D animation style, child-friendly, soft warm lighting, shallow depth of field"
+    },
+    {
+      "number": 15,
+      "title_en": "'Sharing is so much fun!' Dino cheered with all his friends.",
+      "title_vi": "'Chia sẻ vui quá!' Dino reo vui cùng tất cả các bạn.",
+      "image": "page_15.jpg",
+      "prompt": "A cute little green dinosaur with big friendly eyes cheering happily along with cute animal friends — bunny, squirrel, duck — all together in a sunny meadow with treasures shared around, Pixar 3D animation style, child-friendly, soft warm lighting, joyful atmosphere"
+    },
+    {
+      "number": 16,
+      "title_en": "Dino learned that sharing makes everything better. The end.",
+      "title_vi": "Dino học được rằng chia sẻ làm mọi thứ tốt đẹp hơn. Hết rồi.",
+      "image": "page_16.jpg",
+      "prompt": "A cute little green dinosaur with big friendly eyes sleeping peacefully under a starry sky with all friends — bunny, squirrel, duck — cuddled together, warm glowing fireflies, Pixar 3D animation style, child-friendly, soft warm lighting, magical bedtime atmosphere"
+    }
+  ]
+}
